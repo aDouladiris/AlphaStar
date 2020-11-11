@@ -169,8 +169,9 @@ namespace AlphaStar
                 for(int i=0; i<openSet.Count; i++)
                 {
                     if( 
-                        (openSet[i].GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y) < currentNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y))
-                        || (openSet[i].GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y) == currentNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y)
+    (openSet[i].GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y) < currentNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y))
+                        || 
+    (openSet[i].GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y) == currentNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y)
                         && openSet[i].GetH_cost(endingNode.X, endingNode.Y) < currentNode.GetH_cost(endingNode.X, endingNode.Y))
                     )
                     {
@@ -193,7 +194,12 @@ namespace AlphaStar
                 foreach (Node neighbour in GetNeighbours(currentNode))
                 {
                     if (closedSet.Contains(neighbour))
-                        continue; 
+                        continue;
+
+                    Button n_btn = (Button)grid_panel.Controls.Find(neighbour.X.ToString() + "_" + neighbour.Y.ToString(), false)[0];
+                    n_btn.BackColor = Color.Orange;
+                    n_btn.Refresh();
+                    Thread.Sleep(100);
 
                     int currentNodeToNeighbourNodeCost = currentNode.GetG_cost(startingNode.X, startingNode.Y) + GetDistance(currentNode, neighbour);
 
@@ -270,7 +276,9 @@ namespace AlphaStar
         {
             try
             {                
-                return (Node)grid_panel.Controls.Find(X.ToString() + "_" + Y.ToString(), false)[0].Tag;
+                //return (Node)grid_panel.Controls.Find(X.ToString() + "_" + Y.ToString(), false)[0].Tag;
+
+                return (Node)grid_panel.Controls[(Y*30) + X].Tag;
             }
             catch(Exception ex)
             {
