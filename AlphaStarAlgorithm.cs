@@ -13,7 +13,9 @@ namespace AlphaStar
 {
     public partial class AlphaStarAlgorithm : Form
     {
-        Dictionary<string, Node> nodeGrid = new Dictionary<string, Node>();
+        List<Button> buttonsWithColor = new List<Button>();
+        Node startingNode = null;
+        Node endingNode = null;
 
         public AlphaStarAlgorithm()
         {
@@ -25,7 +27,7 @@ namespace AlphaStar
             this.WindowState = FormWindowState.Maximized;
 
             exit_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width-exit_button.Width - 5, exit_button.Location.Y);
-            start_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - start_button.Width - 5, start_button.Location.Y);
+            obstacles_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - obstacles_button.Width - 5, obstacles_button.Location.Y);
             algo_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - algo_button.Width - 5, algo_button.Location.Y);
             clear_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clear_button.Width - 5, clear_button.Location.Y);
 
@@ -61,11 +63,6 @@ namespace AlphaStar
             grid_panel.Height = vertical_tiles_number * buttonSize + 2;
 
 
-            //foreach (Node n in whiteNodes)
-            //{
-            //    Console.WriteLine($"whiteNodes: {n.X}, {n.Y} ");
-            //}
-
         }
 
 
@@ -73,23 +70,51 @@ namespace AlphaStar
         private void Tmp_Click(object sender, EventArgs e)
         {
             Button _sender = (Button)sender;
+            Node n = (Node)grid_panel.Controls.Find(_sender.Name, false)[0].Tag;
 
-            if(_sender.BackColor == Color.White)
+            if (_sender.BackColor == Color.White)
             {
                 _sender.BackColor = Color.Black;
+                n.color = Color.Black;
+
+
             }
             else if (_sender.BackColor == Color.Black)
             {
                 _sender.BackColor = Color.Blue;
+                n.color = Color.Blue;
+                if (startingNode == null )
+                    startingNode = n;
+
+                if (!buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Add(_sender);
             }
             else if (_sender.BackColor == Color.Blue)
             {
                 _sender.BackColor = Color.Red;
+                n.color = Color.Red;
+                if (endingNode == null )
+                    endingNode = n;
+
+                if (!buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Add(_sender);
             }
             else if (_sender.BackColor == Color.Red || _sender.BackColor == Color.Green || _sender.BackColor == Color.Gray)
             {
                 _sender.BackColor = Color.White;
+                n.color = Color.White;
+
+                if (buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Remove(_sender);
             }
+
+            _sender.Refresh();
+
+            if(startingNode != null)
+                Console.WriteLine($"Starting node: {startingNode.X}, {startingNode.Y}");
+
+            if (endingNode != null)
+                Console.WriteLine($"Ending node: {endingNode.X}, {endingNode.Y}");
 
         }
 
@@ -100,39 +125,8 @@ namespace AlphaStar
 
         private void algo_button_Click(object sender, EventArgs e)
         {
-            Node startingNode = null;
-            Node endingNode = null;
 
-
-            foreach (Button b in grid_panel.Controls)
-            {
-                if(b.Width != 20)
-                    b.Text = b.Name;
-
-                if (b.BackColor == Color.Blue)
-                {
-                    startingNode = (Node)b.Tag;
-                    b.ForeColor = Color.White;
-                }
-
-                if(b.BackColor == Color.Red)
-                {
-                    endingNode = (Node)b.Tag;
-                    b.ForeColor = Color.White;
-                }
-
-                if (b.BackColor == Color.Green || b.BackColor == Color.Gray || b.BackColor == Color.Lime)
-                {
-                    b.BackColor = Color.White;
-                }
-
-                b.Refresh();
-
-                Node n = (Node)b.Tag;
-                n.color = b.BackColor;
-            }
-
-            if(startingNode == null)
+            if (startingNode == null)
             {
                 MessageBox.Show("No starting point. Cannot proceed");
                 return;
@@ -144,21 +138,21 @@ namespace AlphaStar
             }
 
             //Reset Grid
-            nodeGrid.Clear();
-            foreach (Button b in grid_panel.Controls)
-            {                
+            //nodeGrid.Clear();
+            //foreach (Button b in grid_panel.Controls)
+            //{                
 
-                Node n = (Node)b.Tag;
+            //    Node n = (Node)b.Tag;
 
-                Console.WriteLine($"all button tags: {n.X} {n.Y} , {n.color}");
+            //    Console.WriteLine($"all button tags: {n.X} {n.Y} , {n.color}");
 
-                nodeGrid.Add(b.Name, n);
-            }
+            //    nodeGrid.Add(b.Name, n);
+            //}
 
-            foreach(Node n in nodeGrid.Values)
-            {
-                Console.WriteLine($"all nodes: {n.X} {n.Y} , {n.color}");
-            }
+            //foreach(Node n in nodeGrid.Values)
+            //{
+            //    Console.WriteLine($"all nodes: {n.X} {n.Y} , {n.color}");
+            //}
 
             //1st
             List<Node> openSet = new List<Node>();
@@ -190,8 +184,10 @@ namespace AlphaStar
                 if (currentNode == endingNode)
                 {
                     RetracePath(startingNode, endingNode);
+                    startingNode = null;
+                    endingNode = null;
 
-                    return;
+                        return;
                 }
 
                 foreach (Node neighbour in GetNeighbours(currentNode))
@@ -217,11 +213,9 @@ namespace AlphaStar
             }
 
             MessageBox.Show("Path not found");
-
-
         }
 
-        private void start_button_Click(object sender, EventArgs e)
+        private void obstacles_button_Click(object sender, EventArgs e)
         {
             Random r = new Random();
 
@@ -229,7 +223,7 @@ namespace AlphaStar
             {
                 int colorProbability = r.Next(0, 2);
 
-                if(colorProbability == 1)
+                if (colorProbability == 1)
                 {
                     b.BackColor = Color.Black;
                 }
@@ -269,29 +263,28 @@ namespace AlphaStar
                     }
                 }
             }
-
-
-
         }
 
 
         private Node GetNodeByCoords(int X, int Y)
         {
             try
-            {
-                return nodeGrid[X.ToString() + "_" + Y.ToString()];
+            {                
+                return (Node)grid_panel.Controls.Find(X.ToString() + "_" + Y.ToString(), false)[0].Tag;
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return null;
-            }
-
-            
+            }            
         }
+
 
         private List<Node> GetNeighbours(Node node)
         { 
             List<Node> neighbours = new List<Node>();
+
+            Console.WriteLine($"Current node: {node.X}, {node.Y} : {node.color} ");
 
             for (int x = -1; x < 2; x++)
             {
@@ -299,7 +292,7 @@ namespace AlphaStar
                 {
                     Console.WriteLine($"x: {x}, y: {y}");
 
-                    //Skip middle coords which correspond to the current node
+                    //Skip middle coords which corresponds to the current node
                     if (x == 0 && y == 0)
                         continue;
 
@@ -315,7 +308,7 @@ namespace AlphaStar
 
             foreach (Node n in neighbours)
             {
-                foreach (Control c in grid_panel.Controls)
+                foreach (Button c in grid_panel.Controls)
                 {
                     if (c.Tag.Equals(n))
                     {
@@ -332,10 +325,12 @@ namespace AlphaStar
                         {
                             c.BackColor = Color.Green;
                             n.color = c.BackColor;
-                        }
-                        
+                        }                        
                         c.Refresh();
-                        //Thread.Sleep(100);
+                        Thread.Sleep(100);
+
+                        if (!buttonsWithColor.Contains(c))
+                            buttonsWithColor.Add(c);
                     }
                 }
             }
@@ -356,14 +351,16 @@ namespace AlphaStar
 
         private void clear_button_Click(object sender, EventArgs e)
         {
-            nodeGrid.Clear();
-            foreach (Button b in grid_panel.Controls)
-            {
-                b.Text = "";
-                b.BackColor = Color.White;
-                b.FlatAppearance.BorderSize = 1;
-                b.FlatAppearance.BorderColor = Color.Black;
-            }
+            buttonsWithColor.Clear();
+            //foreach (Button b in grid_panel.Controls)
+            //{
+            //    b.Text = "";
+            //    b.BackColor = Color.White;
+            //    b.FlatAppearance.BorderSize = 1;
+            //    b.FlatAppearance.BorderColor = Color.Black;
+            //}
         }
+
+
     }
 }
