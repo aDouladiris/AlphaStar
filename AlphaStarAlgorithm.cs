@@ -93,9 +93,12 @@ namespace AlphaStar
                 }
             }
 
+            //Relocation grid
+            grid_panel.Location = new Point(30, 20);
+
             //Resize panel
-            grid_panel.Width = horizontal_tiles_number * buttonSize + 2;
-            grid_panel.Height = vertical_tiles_number * buttonSize + 2;
+            grid_panel.Width = horizontal_tiles_number * buttonSize.Width + 2;
+            grid_panel.Height = vertical_tiles_number * buttonSize.Height + 2;
 
         }
 
