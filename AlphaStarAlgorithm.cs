@@ -16,6 +16,8 @@ namespace AlphaStar
         List<Button> buttonsWithColor = new List<Button>();
         Node startingNode = null;
         Node endingNode = null;
+        int vertical_tiles_number = 0;
+        int horizontal_tiles_number = 0;
 
         public AlphaStarAlgorithm()
         {
@@ -35,8 +37,8 @@ namespace AlphaStar
             grid_panel.Width = Screen.PrimaryScreen.Bounds.Width - 2*exit_button.Width - 15;
             grid_panel.Height = Screen.PrimaryScreen.Bounds.Height - 10;
 
-            int horizontal_tiles_number = (int)grid_panel.Width / buttonSize;
-            int vertical_tiles_number = (int)grid_panel.Height / buttonSize;
+            horizontal_tiles_number = (int)grid_panel.Width / buttonSize;
+            vertical_tiles_number = (int)grid_panel.Height / buttonSize;
 
             for (int i = 0; i < horizontal_tiles_number; i++)
             {
@@ -61,7 +63,6 @@ namespace AlphaStar
             //Resize panel
             grid_panel.Width = horizontal_tiles_number * buttonSize + 2;
             grid_panel.Height = vertical_tiles_number * buttonSize + 2;
-
 
         }
 
@@ -125,6 +126,11 @@ namespace AlphaStar
 
         private void algo_button_Click(object sender, EventArgs e)
         {
+            //Debug
+            foreach(Button b in grid_panel.Controls)
+            {
+                b.Text = b.Name;
+            }
 
             if (startingNode == null)
             {
@@ -196,10 +202,10 @@ namespace AlphaStar
                     if (closedSet.Contains(neighbour))
                         continue;
 
-                    Button n_btn = (Button)grid_panel.Controls.Find(neighbour.X.ToString() + "_" + neighbour.Y.ToString(), false)[0];
-                    n_btn.BackColor = Color.Orange;
-                    n_btn.Refresh();
-                    Thread.Sleep(100);
+                    //Button n_btn = (Button)grid_panel.Controls.Find(neighbour.X.ToString() + "_" + neighbour.Y.ToString(), false)[0];
+                    //n_btn.BackColor = Color.Orange;
+                    //n_btn.Refresh();
+                    //Thread.Sleep(100);
 
                     int currentNodeToNeighbourNodeCost = currentNode.GetG_cost(startingNode.X, startingNode.Y) + GetDistance(currentNode, neighbour);
 
@@ -275,10 +281,12 @@ namespace AlphaStar
         private Node GetNodeByCoords(int X, int Y)
         {
             try
-            {                
-                //return (Node)grid_panel.Controls.Find(X.ToString() + "_" + Y.ToString(), false)[0].Tag;
+            {
+                int index = (X * vertical_tiles_number) + Y;
+                //Console.WriteLine($"search name: {grid_panel.Controls[index].Name} index: {index}");
+                //Console.WriteLine($"actual name: {X}_{Y} index: {grid_panel.Controls.IndexOf(grid_panel.Controls.Find($"{X}_{Y}", false)[0]) }");
 
-                return (Node)grid_panel.Controls[(Y*30) + X].Tag;
+                return (Node)grid_panel.Controls[index].Tag;
             }
             catch(Exception ex)
             {
@@ -308,7 +316,7 @@ namespace AlphaStar
 
                     if (tmp != null && !neighbours.Contains(tmp) && tmp.color != Color.Black && tmp.color != Color.Gray)
                     {
-                        Console.WriteLine($"GetNeighbours node: {tmp.X}, {tmp.Y} : {tmp.color} ");
+                        Console.WriteLine($"GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
                         neighbours.Add(tmp);
                     }                    
                 }
@@ -335,7 +343,7 @@ namespace AlphaStar
                             n.color = c.BackColor;
                         }                        
                         c.Refresh();
-                        Thread.Sleep(100);
+                        //Thread.Sleep(100);
 
                         if (!buttonsWithColor.Contains(c))
                             buttonsWithColor.Add(c);
