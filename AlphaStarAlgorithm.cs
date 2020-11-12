@@ -23,7 +23,8 @@ namespace AlphaStar
         {
             InitializeComponent();
 
-            int buttonSize = int.Parse(Prompt.ShowDialog("Valte megethos", "Btn size", 80));
+            string[] axis_dimensions = Prompt.ShowDialog("Valte megethos", "Btn size", 80, 80);
+            Size buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
 
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
@@ -37,8 +38,8 @@ namespace AlphaStar
             grid_panel.Width = Screen.PrimaryScreen.Bounds.Width - 2*exit_button.Width - 15;
             grid_panel.Height = Screen.PrimaryScreen.Bounds.Height - 10;
 
-            horizontal_tiles_number = (int)grid_panel.Width / buttonSize;
-            vertical_tiles_number = (int)grid_panel.Height / buttonSize;
+            horizontal_tiles_number = (int)grid_panel.Width / buttonSize.Width;
+            vertical_tiles_number = (int)grid_panel.Height / buttonSize.Height;
 
             for (int i = 0; i < horizontal_tiles_number; i++)
             {
@@ -46,8 +47,8 @@ namespace AlphaStar
                 {
                     Button tmp = new Button
                     {
-                        Size = new Size(buttonSize, buttonSize),
-                        Location = new Point(buttonSize * i, buttonSize * j),
+                        Size = buttonSize,
+                        Location = new Point(buttonSize.Width * i, buttonSize.Height * j),
                         FlatStyle = FlatStyle.Flat,
                         BackColor = Color.White,
                         Name = i.ToString() + "_" + j.ToString()
@@ -56,6 +57,38 @@ namespace AlphaStar
                     tmp.Tag = new Node(i, j, tmp.BackColor);
                     tmp.Click += Tmp_Click;
                     grid_panel.Controls.Add(tmp);
+
+                    if (i == 0)
+                    {
+                        Label tmpLbl_Y = new Label
+                        {
+                            Size = new Size(30, buttonSize.Height),
+                            Location = new Point(i, 21 + buttonSize.Height * j),
+                            BackColor = Color.Transparent,
+                            Text = j.ToString(),
+                            TextAlign = ContentAlignment.MiddleCenter,
+                            Font = new Font("Arial", 10, FontStyle.Regular),
+                            BorderStyle = BorderStyle.FixedSingle
+                        };
+
+                        this.Controls.Add(tmpLbl_Y);
+                    }
+                    if (j == 0)
+                    {
+                        Label tmpLbl_X = new Label
+                        {
+                            Size = new Size(buttonSize.Width, 20),
+                            Location = new Point(31 + buttonSize.Width * i, j),
+                            BackColor = Color.Transparent,
+                            Text = i.ToString(),
+                            TextAlign = ContentAlignment.MiddleCenter,
+                            Font = new Font("Arial", 10, FontStyle.Regular),
+                            BorderStyle = BorderStyle.FixedSingle
+
+                        };
+
+                        this.Controls.Add(tmpLbl_X);
+                    }
 
                 }
             }
