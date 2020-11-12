@@ -33,6 +33,8 @@
             this.obstacles_button = new System.Windows.Forms.Button();
             this.algo_button = new System.Windows.Forms.Button();
             this.clear_button = new System.Windows.Forms.Button();
+            this.clearAll_button = new System.Windows.Forms.Button();
+            this.debug_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // exit_button
@@ -95,12 +97,40 @@
             this.clear_button.UseVisualStyleBackColor = false;
             this.clear_button.Click += new System.EventHandler(this.clear_button_Click);
             // 
+            // clearAll_button
+            // 
+            this.clearAll_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.clearAll_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.clearAll_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.clearAll_button.Location = new System.Drawing.Point(1610, 238);
+            this.clearAll_button.Name = "clearAll_button";
+            this.clearAll_button.Size = new System.Drawing.Size(60, 35);
+            this.clearAll_button.TabIndex = 5;
+            this.clearAll_button.Text = "Clear All";
+            this.clearAll_button.UseVisualStyleBackColor = false;
+            this.clearAll_button.Click += new System.EventHandler(this.clearAll_button_Click);
+            // 
+            // debug_button
+            // 
+            this.debug_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.debug_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.debug_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.debug_button.Location = new System.Drawing.Point(1610, 293);
+            this.debug_button.Name = "debug_button";
+            this.debug_button.Size = new System.Drawing.Size(60, 35);
+            this.debug_button.TabIndex = 6;
+            this.debug_button.Text = "Debug";
+            this.debug_button.UseVisualStyleBackColor = false;
+            this.debug_button.Click += new System.EventHandler(this.debug_button_Click);
+            // 
             // AlphaStarAlgorithm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1682, 675);
+            this.Controls.Add(this.debug_button);
+            this.Controls.Add(this.clearAll_button);
             this.Controls.Add(this.clear_button);
             this.Controls.Add(this.algo_button);
             this.Controls.Add(this.obstacles_button);
@@ -119,6 +149,8 @@
         private System.Windows.Forms.Button obstacles_button;
         private System.Windows.Forms.Button algo_button;
         private System.Windows.Forms.Button clear_button;
+        private System.Windows.Forms.Button clearAll_button;
+        private System.Windows.Forms.Button debug_button;
     }
 }
 

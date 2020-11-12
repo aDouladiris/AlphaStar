@@ -13,7 +13,9 @@ namespace AlphaStar
 {
     public partial class AlphaStarAlgorithm : Form
     {
+
         List<Button> buttonsWithColor = new List<Button>();
+        List<Button> buttonsWithObstacles = new List<Button>();
         Node startingNode = null;
         Node endingNode = null;
         int vertical_tiles_number = 0;
@@ -33,6 +35,8 @@ namespace AlphaStar
             obstacles_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - obstacles_button.Width - 5, obstacles_button.Location.Y);
             algo_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - algo_button.Width - 5, algo_button.Location.Y);
             clear_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clear_button.Width - 5, clear_button.Location.Y);
+            clearAll_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clearAll_button.Width - 5, clearAll_button.Location.Y);
+            debug_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - debug_button.Width - 5, debug_button.Location.Y);
 
             grid_panel.Location = new Point(5, 5);
             grid_panel.Width = Screen.PrimaryScreen.Bounds.Width - 2*exit_button.Width - 15;
@@ -107,51 +111,66 @@ namespace AlphaStar
         private void Tmp_Click(object sender, EventArgs e)
         {
             Button _sender = (Button)sender;
-            Node n = (Node)grid_panel.Controls.Find(_sender.Name, false)[0].Tag;
+            Node n = (Node)_sender.Tag;
 
+            //Black buttons
             if (_sender.BackColor == Color.White)
             {
                 _sender.BackColor = Color.Black;
-                n.color = Color.Black;
 
+                //Add to obstacles list
+                if (!buttonsWithObstacles.Contains(_sender))
+                    buttonsWithObstacles.Add(_sender);
 
+                //Remove from color list
+                if (buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Remove(_sender);
             }
+            //Blue button
             else if (_sender.BackColor == Color.Black)
             {
                 _sender.BackColor = Color.Blue;
-                n.color = Color.Blue;
+
                 if (startingNode == null )
                     startingNode = n;
 
-                if (!buttonsWithColor.Contains(_sender))
-                    buttonsWithColor.Add(_sender);
-            }
-            else if (_sender.BackColor == Color.Blue)
-            {
-                _sender.BackColor = Color.Red;
-                n.color = Color.Red;
-                if (endingNode == null )
-                    endingNode = n;
-
-                if (!buttonsWithColor.Contains(_sender))
-                    buttonsWithColor.Add(_sender);
-            }
-            else if (_sender.BackColor == Color.Red || _sender.BackColor == Color.Green || _sender.BackColor == Color.Gray)
-            {
-                _sender.BackColor = Color.White;
-                n.color = Color.White;
+                //Remove from other lists
+                if (buttonsWithObstacles.Contains(_sender))
+                    buttonsWithObstacles.Remove(_sender);
 
                 if (buttonsWithColor.Contains(_sender))
                     buttonsWithColor.Remove(_sender);
             }
+            //Red button
+            else if (_sender.BackColor == Color.Blue)
+            {
+                _sender.BackColor = Color.Red;
 
+                if (endingNode == null )
+                    endingNode = n;
+
+                //Remove from other lists
+                if (buttonsWithObstacles.Contains(_sender))
+                    buttonsWithObstacles.Remove(_sender);
+
+                if (buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Remove(_sender);
+            }
+            else if (_sender.BackColor == Color.Red || _sender.BackColor == Color.Green || _sender.BackColor == Color.Gray)
+            {
+                _sender.BackColor = Color.White;
+
+                //Remove from other lists
+                if (buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Remove(_sender);
+
+                if (buttonsWithObstacles.Contains(_sender))
+                    buttonsWithObstacles.Remove(_sender);
+            }
+
+            //Assign the new color to the node            
+            n.color = _sender.BackColor;
             _sender.Refresh();
-
-            if(startingNode != null)
-                Console.WriteLine($"Starting node: {startingNode.X}, {startingNode.Y}");
-
-            if (endingNode != null)
-                Console.WriteLine($"Ending node: {endingNode.X}, {endingNode.Y}");
 
         }
 
@@ -162,11 +181,13 @@ namespace AlphaStar
 
         private void algo_button_Click(object sender, EventArgs e)
         {
-            //Debug
-            foreach(Button b in grid_panel.Controls)
+            Console.WriteLine($"obstacle number: {buttonsWithObstacles.Count}");
+
+            foreach (Button b in buttonsWithObstacles)
             {
-                b.Text = b.Name;
+                Console.WriteLine($"obstacle buttons: {b.Name}, {b.BackColor}");
             }
+
 
             if (startingNode == null)
             {
@@ -178,23 +199,6 @@ namespace AlphaStar
                 MessageBox.Show("No ending point. Cannot proceed");
                 return;
             }
-
-            //Reset Grid
-            //nodeGrid.Clear();
-            //foreach (Button b in grid_panel.Controls)
-            //{                
-
-            //    Node n = (Node)b.Tag;
-
-            //    Console.WriteLine($"all button tags: {n.X} {n.Y} , {n.color}");
-
-            //    nodeGrid.Add(b.Name, n);
-            //}
-
-            //foreach(Node n in nodeGrid.Values)
-            //{
-            //    Console.WriteLine($"all nodes: {n.X} {n.Y} , {n.color}");
-            //}
 
             //1st
             List<Node> openSet = new List<Node>();
@@ -227,10 +231,14 @@ namespace AlphaStar
                 if (currentNode == endingNode)
                 {
                     RetracePath(startingNode, endingNode);
-                    startingNode = null;
-                    endingNode = null;
 
-                        return;
+                    //Console.WriteLine($"color number   : {buttonsWithColor.Count}");
+                    //foreach (Button b in buttonsWithColor)
+                    //{
+                    //    Console.WriteLine($"color buttons: {b.Name}, {b.BackColor}");
+                    //}
+
+                    return;
                 }
 
                 foreach (Node neighbour in GetNeighbours(currentNode))
@@ -274,6 +282,11 @@ namespace AlphaStar
                 if (colorProbability == 1)
                 {
                     b.BackColor = Color.Black;
+                    Node n = (Node)b.Tag;
+                    n.color = b.BackColor;
+
+                    if (!buttonsWithObstacles.Contains(b))
+                        buttonsWithObstacles.Add(b);
                 }
 
                 //Console.WriteLine($"All buttons: {b.Name}, {b.BackColor}");
@@ -319,9 +332,6 @@ namespace AlphaStar
             try
             {
                 int index = (X * vertical_tiles_number) + Y;
-                //Console.WriteLine($"search name: {grid_panel.Controls[index].Name} index: {index}");
-                //Console.WriteLine($"actual name: {X}_{Y} index: {grid_panel.Controls.IndexOf(grid_panel.Controls.Find($"{X}_{Y}", false)[0]) }");
-
                 return (Node)grid_panel.Controls[index].Tag;
             }
             catch(Exception ex)
@@ -329,6 +339,20 @@ namespace AlphaStar
                 Console.WriteLine(ex.Message);
                 return null;
             }            
+        }
+
+        private Button GetButtonByCoords(int X, int Y)
+        {
+            try
+            {
+                int index = (X * vertical_tiles_number) + Y;
+                return (Button)grid_panel.Controls[index];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
 
 
@@ -348,42 +372,37 @@ namespace AlphaStar
                     if (x == 0 && y == 0)
                         continue;
 
-                    Node tmp = GetNodeByCoords(node.X + x, node.Y + y);
+                    int new_X = node.X + x;
+                    int new_Y = node.Y + y;
+
+                    //If nex coords are crossing the grid bounds, skip them
+                    if (new_X == horizontal_tiles_number || new_Y == vertical_tiles_number)
+                        continue;
+
+                    Node tmp = GetNodeByCoords(new_X, new_Y);
 
                     if (tmp != null && !neighbours.Contains(tmp) && tmp.color != Color.Black && tmp.color != Color.Gray)
                     {
                         Console.WriteLine($"GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
                         neighbours.Add(tmp);
+                        Button btn = GetButtonByCoords(tmp.X, tmp.Y);                            
+
+                        if(tmp.color == Color.White)
+                        {
+                            tmp.color = Color.Green;
+                            btn.BackColor = Color.Green;
+                            buttonsWithColor.Add(btn);
+
+                        }
+                        else if (tmp.color == Color.Green)
+                        {
+                            tmp.color = Color.Gray;
+                            btn.BackColor = Color.Gray;
+                            buttonsWithColor.Add(btn);
+
+                        }
+                        btn.Refresh();
                     }                    
-                }
-            }
-
-            foreach (Node n in neighbours)
-            {
-                foreach (Button c in grid_panel.Controls)
-                {
-                    if (c.Tag.Equals(n))
-                    {
-                        if (c.BackColor == Color.Black)
-                        {
-                            continue;
-                        }
-                        else if (c.BackColor == Color.Green)
-                        {
-                            c.BackColor = Color.Gray;
-                            n.color = c.BackColor;
-                        }
-                        else if (c.BackColor != Color.Blue && c.BackColor != Color.Red)
-                        {
-                            c.BackColor = Color.Green;
-                            n.color = c.BackColor;
-                        }                        
-                        c.Refresh();
-                        //Thread.Sleep(100);
-
-                        if (!buttonsWithColor.Contains(c))
-                            buttonsWithColor.Add(c);
-                    }
                 }
             }
 
@@ -403,16 +422,56 @@ namespace AlphaStar
 
         private void clear_button_Click(object sender, EventArgs e)
         {
+            
+            foreach (Button b in buttonsWithColor)
+            {
+                b.Text = "";
+                b.BackColor = Color.White;
+                b.FlatAppearance.BorderSize = 1;
+                b.FlatAppearance.BorderColor = Color.Black;
+            }
             buttonsWithColor.Clear();
-            //foreach (Button b in grid_panel.Controls)
-            //{
-            //    b.Text = "";
-            //    b.BackColor = Color.White;
-            //    b.FlatAppearance.BorderSize = 1;
-            //    b.FlatAppearance.BorderColor = Color.Black;
-            //}
         }
 
+        private void clearAll_button_Click(object sender, EventArgs e)
+        {
+            foreach (Button b in buttonsWithObstacles)
+            {
+                b.BackColor = Color.White;
+                b.FlatAppearance.BorderSize = 1;
+                b.FlatAppearance.BorderColor = Color.Black;
+            }
+            buttonsWithObstacles.Clear();
 
+            foreach (Button b in buttonsWithColor)
+            {
+                b.Text = "";
+                b.BackColor = Color.White;
+                b.FlatAppearance.BorderSize = 1;
+                b.FlatAppearance.BorderColor = Color.Black;
+            }
+            buttonsWithColor.Clear();
+        }
+
+        private void debug_button_Click(object sender, EventArgs e)
+        {
+            //Debug
+            foreach (Button b in grid_panel.Controls)
+            {
+                if(b.Text.Equals(""))
+                {
+                    string[] buffer = b.Name.Split('_');
+
+                    b.Text = $"I : {grid_panel.Controls.IndexOf(b)}\nX: {buffer[0]}\nY: {buffer[1]}";
+                    b.TextAlign = ContentAlignment.MiddleLeft;
+                }
+                else
+                {
+                    b.Text = "";
+                }
+
+                
+            }
+        }
     }
 }
