@@ -16,8 +16,8 @@ namespace AlphaStar
 
         List<Button> buttonsWithColor = new List<Button>();
         List<Button> buttonsWithObstacles = new List<Button>();
-        Node startingNode = null;
-        Node endingNode = null;
+        Button startButton = null;
+        Button finishButton = null;
         int vertical_tiles_number = 0;
         int horizontal_tiles_number = 0;
 
@@ -106,17 +106,17 @@ namespace AlphaStar
 
         }
 
-
-
         private void Tmp_Click(object sender, EventArgs e)
         {
             Button _sender = (Button)sender;
-            Node n = (Node)_sender.Tag;
+            Node _senderNode = (Node)_sender.Tag;
 
             //Black buttons
             if (_sender.BackColor == Color.White)
             {
                 _sender.BackColor = Color.Black;
+                //Assign the new color to the node            
+                _senderNode.color = _sender.BackColor;
 
                 //Add to obstacles list
                 if (!buttonsWithObstacles.Contains(_sender))
@@ -127,38 +127,52 @@ namespace AlphaStar
                     buttonsWithColor.Remove(_sender);
             }
             //Blue button
-            else if (_sender.BackColor == Color.Black)
+            else if (_sender.BackColor == Color.Black && startButton == null)
             {
-                _sender.BackColor = Color.Blue;
 
-                if (startingNode == null )
-                    startingNode = n;
+                Console.WriteLine("Blue in");
+                _sender.BackColor = Color.Blue;
+                startButton = _sender;
+                //n_start = (Node)_sender.Tag;
+                //n_start.color = _sender.BackColor;
+
+
+                //Assign the new color to the node            
+                _senderNode.color = _sender.BackColor;
+
+                //Add to color list
+                if (!buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Add(_sender);
 
                 //Remove from other lists
                 if (buttonsWithObstacles.Contains(_sender))
                     buttonsWithObstacles.Remove(_sender);
-
-                if (buttonsWithColor.Contains(_sender))
-                    buttonsWithColor.Remove(_sender);
             }
             //Red button
-            else if (_sender.BackColor == Color.Blue)
+            else if (_sender.BackColor == Color.Black && finishButton == null)
             {
+
+                Console.WriteLine("Red in");
                 _sender.BackColor = Color.Red;
+                finishButton = _sender;
+                //n_start = (Node)_sender.Tag;
+                //n_start.color = _sender.BackColor;
 
-                if (endingNode == null )
-                    endingNode = n;
+                //Add to color list
+                if (!buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Add(_sender);
 
-                //Remove from other lists
-                if (buttonsWithObstacles.Contains(_sender))
-                    buttonsWithObstacles.Remove(_sender);
-
-                if (buttonsWithColor.Contains(_sender))
-                    buttonsWithColor.Remove(_sender);
+                //Assign the new color to the node            
+                _senderNode.color = _sender.BackColor;
             }
-            else if (_sender.BackColor == Color.Red || _sender.BackColor == Color.Green || _sender.BackColor == Color.Gray)
+            else if (
+                (_sender.BackColor == Color.Black && finishButton != null && startButton !=null) ||
+                 _sender.BackColor == Color.Green || _sender.BackColor == Color.Gray
+                )
             {
                 _sender.BackColor = Color.White;
+                //Assign the new color to the node            
+                _senderNode.color = _sender.BackColor;
 
                 //Remove from other lists
                 if (buttonsWithColor.Contains(_sender))
@@ -168,10 +182,14 @@ namespace AlphaStar
                     buttonsWithObstacles.Remove(_sender);
             }
 
-            //Assign the new color to the node            
-            n.color = _sender.BackColor;
+
             _sender.Refresh();
 
+            if (startButton != null)
+                Console.WriteLine($"s button: {startButton.Name} {startButton.BackColor}");
+
+            if (finishButton != null)
+                Console.WriteLine($"e button: {finishButton.Name} {finishButton.BackColor}");
         }
 
         private void exit_button_Click(object sender, EventArgs e)
@@ -181,20 +199,20 @@ namespace AlphaStar
 
         private void algo_button_Click(object sender, EventArgs e)
         {
-            Console.WriteLine($"obstacle number: {buttonsWithObstacles.Count}");
+            //Console.WriteLine($"obstacle number: {buttonsWithObstacles.Count}");
 
-            foreach (Button b in buttonsWithObstacles)
-            {
-                Console.WriteLine($"obstacle buttons: {b.Name}, {b.BackColor}");
-            }
+            //foreach (Button b in buttonsWithObstacles)
+            //{
+            //    Console.WriteLine($"obstacle buttons: {b.Name}, {b.BackColor}");
+            //}
 
 
-            if (startingNode == null)
+            if (startButton == null)
             {
                 MessageBox.Show("No starting point. Cannot proceed");
                 return;
             }
-            else if (endingNode == null)
+            else if (finishButton == null)
             {
                 MessageBox.Show("No ending point. Cannot proceed");
                 return;
@@ -204,6 +222,9 @@ namespace AlphaStar
             List<Node> openSet = new List<Node>();
             //2nd
             List<Node> closedSet = new List<Node>();
+
+            Node startingNode = (Node)startButton.Tag;
+            Node endingNode = (Node)finishButton.Tag;
 
             //3rd
             openSet.Add(startingNode);
@@ -231,6 +252,9 @@ namespace AlphaStar
                 if (currentNode == endingNode)
                 {
                     RetracePath(startingNode, endingNode);
+
+                    startButton = null;
+                    finishButton = null;
 
                     //Console.WriteLine($"color number   : {buttonsWithColor.Count}");
                     //foreach (Button b in buttonsWithColor)
