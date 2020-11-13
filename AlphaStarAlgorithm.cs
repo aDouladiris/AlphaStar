@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -16,18 +17,17 @@ namespace AlphaStar
 
         List<Button> buttonsWithColor = new List<Button>();
         List<Button> buttonsWithObstacles = new List<Button>();
+        List<Control> gridControlList = new List<Control>();
         Button startButton = null;
         Button finishButton = null;
         int vertical_tiles_number = 0;
         int horizontal_tiles_number = 0;
+        string[] axis_dimensions = Prompt.ShowDialog("Valte megethos", "Btn size", 80, 80);
+        Size buttonSize;
 
         public AlphaStarAlgorithm()
         {
             InitializeComponent();
-
-            string[] axis_dimensions = Prompt.ShowDialog("Valte megethos", "Btn size", 80, 80);
-            int label_width = 30;
-            Size buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
 
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
@@ -38,12 +38,16 @@ namespace AlphaStar
             clear_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clear_button.Width - 5, clear_button.Location.Y);
             clearAll_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clearAll_button.Width - 5, clearAll_button.Location.Y);
             debug_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - debug_button.Width - 5, debug_button.Location.Y);
+            resize_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - resize_button.Width - 5, resize_button.Location.Y);
+            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - timer_label.Width - 5, timer_label.Location.Y);
 
-            TransformGrid(buttonSize, label_width);
+            buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
+            TransformGrid();
         }
 
-        private void TransformGrid(Size buttonSize, int label_width)
+        private void TransformGrid()
         {
+            int label_width = 30;
             grid_panel.Location = new Point(5, 5);
             grid_panel.Width = Screen.PrimaryScreen.Bounds.Width - 2 * exit_button.Width - 15;
             grid_panel.Height = Screen.PrimaryScreen.Bounds.Height - 10;
@@ -67,6 +71,7 @@ namespace AlphaStar
                     tmp.Tag = new Node(i, j, tmp.BackColor);
                     tmp.Click += Tmp_Click;
                     grid_panel.Controls.Add(tmp);
+                    gridControlList.Add((Control)tmp);
 
                     if (buttonSize.Width >= label_width)
                         DrawLabelsAroundGrid(i, j, buttonSize);
@@ -100,6 +105,7 @@ namespace AlphaStar
                 };
 
                 this.Controls.Add(tmpLbl_Y);
+                gridControlList.Add((Control)tmpLbl_Y);
             }
             //Horizontal labels
             if (j == 0)
@@ -113,10 +119,10 @@ namespace AlphaStar
                     TextAlign = ContentAlignment.MiddleCenter,
                     Font = new Font("Microsoft Sans Serif", 10, FontStyle.Regular),
                     BorderStyle = BorderStyle.FixedSingle
-
                 };
 
                 this.Controls.Add(tmpLbl_X);
+                gridControlList.Add((Control)tmpLbl_X);
             }
         }
 
@@ -247,6 +253,10 @@ namespace AlphaStar
                 return;
             }
 
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            string timerStr = "";
+
             //1st
             List<Node> openSet = new List<Node>();
             //2nd
@@ -269,7 +279,8 @@ namespace AlphaStar
 
                     Button btn = GetButtonByCoords(openSet[i].X, openSet[i].Y);
 
-                    btn.Text = "F: " + openSet[i].F_cost.ToString() + "\nG: " + openSet[i].G_cost.ToString() + "\nH: " + openSet[i].H_cost;
+                    if(buttonSize.Width >= 50)
+                        btn.Text = "F: " + openSet[i].F_cost.ToString() + "\nG: " + openSet[i].G_cost.ToString() + "\nH: " + openSet[i].H_cost;
 
                     if (openSet[i].F_cost < currentNode.F_cost)                    
                         currentNode = openSet[i];
@@ -289,6 +300,10 @@ namespace AlphaStar
                 if (currentNode == endingNode)
                 {
                     RetracePath(startingNode, endingNode);
+                    stopwatch.Stop();
+                    timerStr = stopwatch.ElapsedMilliseconds.ToString() + " ms";
+                    timer_label.Size = Prompt.GetStringSize(timerStr);
+                    timer_label.Text = timerStr;
                     return;
                 }
 
@@ -321,6 +336,11 @@ namespace AlphaStar
                 Console.WriteLine("Hue: " + b.BackColor.GetHue());
                 Console.WriteLine("Saturation: " + b.BackColor.GetSaturation());
             }
+
+            stopwatch.Stop();
+            timerStr = stopwatch.ElapsedMilliseconds.ToString() + " ms";
+            timer_label.Size = Prompt.GetStringSize(timerStr);
+            timer_label.Text = timerStr;
             MessageBox.Show("Path not found");
         }
 
@@ -496,6 +516,7 @@ namespace AlphaStar
             finishButton = null;
             Node n;
 
+            timer_label.Text = "";
             foreach (Button b in buttonsWithColor)
             {
                 n = (Node)b.Tag;
@@ -504,9 +525,10 @@ namespace AlphaStar
            
                 b.FlatAppearance.BorderSize = 1;
                 b.FlatAppearance.BorderColor = Color.Black;
-                b.Refresh();
-                
+                b.Refresh();                
             }
+
+            
             buttonsWithColor.Clear();
         }
 
@@ -514,7 +536,8 @@ namespace AlphaStar
         {
             startButton = null;
             finishButton = null;
-            Node n = null;
+            Node n;
+            timer_label.Text = "";
 
             foreach (Button b in buttonsWithObstacles)
             {
@@ -543,36 +566,53 @@ namespace AlphaStar
 
         private void debug_button_Click(object sender, EventArgs e)
         {
-            //Debug
-            foreach (Button b in grid_panel.Controls)
+            if(buttonSize.Width > 50)
             {
-                if(b.Text.Equals(""))
+                //Debug
+                foreach (Button b in grid_panel.Controls)
                 {
-
-                    string[] buffer = b.Name.Split('_');
-
-                    b.Text = $"I : {grid_panel.Controls.IndexOf(b)}\nX: {buffer[0]}\nY: {buffer[1]}";
-                    b.TextAlign = ContentAlignment.MiddleCenter;
-                    b.FlatAppearance.BorderSize = 1;
-                    b.FlatAppearance.BorderColor = Color.Black;
-
-                    if (b.BackColor.GetBrightness() >= 0.5 )
+                    if (b.Text.Equals(""))
                     {
-                        b.ForeColor = Color.Black;
+
+                        string[] buffer = b.Name.Split('_');
+
+                        b.Text = $"I : {grid_panel.Controls.IndexOf(b)}\nX: {buffer[0]}\nY: {buffer[1]}";
+                        b.TextAlign = ContentAlignment.MiddleCenter;
+                        b.FlatAppearance.BorderSize = 1;
+                        b.FlatAppearance.BorderColor = Color.Black;
+
+                        if (b.BackColor.GetBrightness() >= 0.5)
+                        {
+                            b.ForeColor = Color.Black;
+                        }
+                        else
+                        {
+                            b.ForeColor = Color.White;
+                        }
                     }
                     else
                     {
-                        b.ForeColor = Color.White;
+                        b.Text = "";
                     }
-
                 }
-                else
-                {
-                    b.Text = "";
-                }
-
-                
             }
+
         }
+
+        private void resize_button_Click(object sender, EventArgs e)
+        {
+            foreach(Control c in gridControlList)
+            {
+                c.Dispose();
+            }
+            this.Refresh();
+            grid_panel.Refresh();
+
+            string[] axis_dimensions = Prompt.ShowDialog("Valte megethos", "Btn size", 80, 80);
+            buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
+            TransformGrid();
+        }
+
+
     }
 }

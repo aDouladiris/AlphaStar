@@ -21,11 +21,11 @@ namespace AlphaStar
                 StartPosition = FormStartPosition.CenterScreen
             };
 
-            Size promptLabelSize = GetStringSize(text).ToSize();
-            Size inputTextboxSize = GetStringSize("999").ToSize();
+            Size promptLabelSize = GetStringSize(text);
+            Size inputTextboxSize = GetStringSize("999");
 
             string confirmButtonText = "Confirm";
-            Size confirmButtonSize = GetStringSize("Confirm").ToSize();
+            Size confirmButtonSize = GetStringSize("Confirm");
 
             Label promptLabel = new Label()
             {
@@ -84,15 +84,14 @@ namespace AlphaStar
             }
         }
 
-        public static SizeF GetStringSize(string stringToMeasure)
+        public static Size GetStringSize(string stringToMeasure)
         {
             Font stringFont = new Font("Microsoft Sans Serif", 12);
             Graphics graphs = new Label().CreateGraphics();
 
             string measuredStringWidth = stringToMeasure.Replace(" ", "_");
-            SizeF stringSize = graphs.MeasureString(measuredStringWidth, stringFont);
 
-            return stringSize;
+            return graphs.MeasureString(measuredStringWidth, stringFont).ToSize();
         }
 
 

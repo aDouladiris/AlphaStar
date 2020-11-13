@@ -35,6 +35,8 @@
             this.clear_button = new System.Windows.Forms.Button();
             this.clearAll_button = new System.Windows.Forms.Button();
             this.debug_button = new System.Windows.Forms.Button();
+            this.resize_button = new System.Windows.Forms.Button();
+            this.timer_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // exit_button
@@ -123,12 +125,37 @@
             this.debug_button.UseVisualStyleBackColor = false;
             this.debug_button.Click += new System.EventHandler(this.debug_button_Click);
             // 
+            // resize_button
+            // 
+            this.resize_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.resize_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.resize_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.resize_button.Location = new System.Drawing.Point(1610, 346);
+            this.resize_button.Name = "resize_button";
+            this.resize_button.Size = new System.Drawing.Size(60, 35);
+            this.resize_button.TabIndex = 7;
+            this.resize_button.Text = "Resize";
+            this.resize_button.UseVisualStyleBackColor = false;
+            this.resize_button.Click += new System.EventHandler(this.resize_button_Click);
+            // 
+            // timer_label
+            // 
+            this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.timer_label.Location = new System.Drawing.Point(1610, 398);
+            this.timer_label.Name = "timer_label";
+            this.timer_label.Size = new System.Drawing.Size(60, 23);
+            this.timer_label.TabIndex = 8;
+            this.timer_label.Text = "Timer";
+            this.timer_label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // AlphaStarAlgorithm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1682, 675);
+            this.Controls.Add(this.timer_label);
+            this.Controls.Add(this.resize_button);
             this.Controls.Add(this.debug_button);
             this.Controls.Add(this.clearAll_button);
             this.Controls.Add(this.clear_button);
@@ -151,6 +178,8 @@
         private System.Windows.Forms.Button clear_button;
         private System.Windows.Forms.Button clearAll_button;
         private System.Windows.Forms.Button debug_button;
+        private System.Windows.Forms.Button resize_button;
+        private System.Windows.Forms.Label timer_label;
     }
 }
 
