@@ -39,8 +39,13 @@ namespace AlphaStar
             clearAll_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clearAll_button.Width - 5, clearAll_button.Location.Y);
             debug_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - debug_button.Width - 5, debug_button.Location.Y);
 
+            TransformGrid(buttonSize, label_width);
+        }
+
+        private void TransformGrid(Size buttonSize, int label_width)
+        {
             grid_panel.Location = new Point(5, 5);
-            grid_panel.Width = Screen.PrimaryScreen.Bounds.Width - 2*exit_button.Width - 15;
+            grid_panel.Width = Screen.PrimaryScreen.Bounds.Width - 2 * exit_button.Width - 15;
             grid_panel.Height = Screen.PrimaryScreen.Bounds.Height - 10;
 
             horizontal_tiles_number = (int)grid_panel.Width / buttonSize.Width;
@@ -63,7 +68,7 @@ namespace AlphaStar
                     tmp.Click += Tmp_Click;
                     grid_panel.Controls.Add(tmp);
 
-                    if(buttonSize.Width >= label_width)
+                    if (buttonSize.Width >= label_width)
                         DrawLabelsAroundGrid(i, j, buttonSize);
 
                 }
@@ -76,7 +81,6 @@ namespace AlphaStar
             //Resize panel
             grid_panel.Width = horizontal_tiles_number * buttonSize.Width + 2;
             grid_panel.Height = vertical_tiles_number * buttonSize.Height + 2;
-
         }
 
         private void DrawLabelsAroundGrid(int i, int j, Size buttonSize)
@@ -260,16 +264,24 @@ namespace AlphaStar
                 Node currentNode = openSet[0];
                 for(int i=0; i<openSet.Count; i++)
                 {
-                    if( 
-    (openSet[i].GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y) < currentNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y))
-                        || 
-    (openSet[i].GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y) == currentNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y)
-                        && openSet[i].GetH_cost(endingNode.X, endingNode.Y) < currentNode.GetH_cost(endingNode.X, endingNode.Y))
-                    )
-                    {
+                    openSet[i].GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
+                    currentNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
+
+                    Button btn = GetButtonByCoords(openSet[i].X, openSet[i].Y);
+
+                    btn.Text = "F: " + openSet[i].F_cost.ToString() + "\nG: " + openSet[i].G_cost.ToString() + "\nH: " + openSet[i].H_cost;
+
+                    if (openSet[i].F_cost < currentNode.F_cost)                    
                         currentNode = openSet[i];
-                    }
+                    else if (openSet[i].F_cost == currentNode.F_cost && openSet[i].H_cost < currentNode.H_cost)
+                        currentNode = openSet[i];
+
                 }
+
+                Button currentNode_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
+                currentNode_btn.BackColor = Color.Gray;
+                currentNode.color = currentNode_btn.BackColor;
+                currentNode_btn.Refresh();
 
                 openSet.Remove(currentNode);
                 closedSet.Add(currentNode);
@@ -288,21 +300,15 @@ namespace AlphaStar
                     //Button n_btn = (Button)grid_panel.Controls.Find(neighbour.X.ToString() + "_" + neighbour.Y.ToString(), false)[0];
                     //n_btn.BackColor = Color.Orange;
                     //n_btn.Refresh();
-                    //Thread.Sleep(100);
+                    //Thread.Sleep(200);
 
-                    int currentNodeToNeighbourNodeCost = currentNode.GetG_cost(startingNode.X, startingNode.Y) + GetDistance(currentNode, neighbour);
 
-                    if(currentNodeToNeighbourNodeCost < neighbour.GetG_cost(startingNode.X, startingNode.Y) || !openSet.Contains(neighbour) )
+                    int currentNodeToNeighbourNode = currentNode.G_cost + GetDistance(currentNode, neighbour);
+
+                    if(currentNodeToNeighbourNode < neighbour.G_cost || !openSet.Contains(neighbour) )
                     {
-                        if (currentNode != null)
-                        {
-                            neighbour.Parent = currentNode;
-
-                            if (!openSet.Contains(neighbour))
-                            {
-                                openSet.Add(neighbour);
-                            }
-                        }
+                        neighbour.Parent = currentNode;
+                        openSet.Add(neighbour);                     
                     }
                 }
             }
@@ -445,9 +451,7 @@ namespace AlphaStar
                     if (
                         tmp != null 
                         && !neighbours.Contains(tmp) 
-                        && btn.BackColor != Color.Black 
-                        && btn.BackColor != Color.Gray
-                        && btn.BackColor != Color.Blue
+                        && btn.BackColor != Color.Black
                         )
                     {
                         Console.WriteLine($"GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
@@ -461,11 +465,11 @@ namespace AlphaStar
                             buttonsWithColor.Add(btn);
                             Console.WriteLine("Entered: " + btn.BackColor);
                         }
-                        else if (tmp.color == Color.Green)
-                        {
-                            tmp.color = Color.Gray;
-                            btn.BackColor = tmp.color;
-                        }
+                        //else if (tmp.color == Color.Green)
+                        //{
+                        //    tmp.color = Color.Gray;
+                        //    btn.BackColor = tmp.color;
+                        //}
                         
                         btn.Refresh();
                     }                    
@@ -490,7 +494,7 @@ namespace AlphaStar
         {
             startButton = null;
             finishButton = null;
-            Node n = null;
+            Node n;
 
             foreach (Button b in buttonsWithColor)
             {
