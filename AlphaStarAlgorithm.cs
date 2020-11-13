@@ -26,6 +26,7 @@ namespace AlphaStar
             InitializeComponent();
 
             string[] axis_dimensions = Prompt.ShowDialog("Valte megethos", "Btn size", 80, 80);
+            int label_width = 30;
             Size buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
 
             this.FormBorderStyle = FormBorderStyle.None;
@@ -62,48 +63,57 @@ namespace AlphaStar
                     tmp.Click += Tmp_Click;
                     grid_panel.Controls.Add(tmp);
 
-                    if (i == 0)
-                    {
-                        Label tmpLbl_Y = new Label
-                        {
-                            Size = new Size(30, buttonSize.Height),
-                            Location = new Point(i, 21 + buttonSize.Height * j),
-                            BackColor = Color.Transparent,
-                            Text = j.ToString(),
-                            TextAlign = ContentAlignment.MiddleCenter,
-                            Font = new Font("Arial", 10, FontStyle.Regular),
-                            BorderStyle = BorderStyle.FixedSingle
-                        };
-
-                        this.Controls.Add(tmpLbl_Y);
-                    }
-                    if (j == 0)
-                    {
-                        Label tmpLbl_X = new Label
-                        {
-                            Size = new Size(buttonSize.Width, 20),
-                            Location = new Point(31 + buttonSize.Width * i, j),
-                            BackColor = Color.Transparent,
-                            Text = i.ToString(),
-                            TextAlign = ContentAlignment.MiddleCenter,
-                            Font = new Font("Arial", 10, FontStyle.Regular),
-                            BorderStyle = BorderStyle.FixedSingle
-
-                        };
-
-                        this.Controls.Add(tmpLbl_X);
-                    }
+                    if(buttonSize.Width >= label_width)
+                        DrawLabelsAroundGrid(i, j, buttonSize);
 
                 }
             }
 
-            //Relocation grid
-            grid_panel.Location = new Point(30, 20);
+            //Relocate grid if size is correct
+            if (buttonSize.Width >= label_width)
+                grid_panel.Location = new Point(30, 20);
 
             //Resize panel
             grid_panel.Width = horizontal_tiles_number * buttonSize.Width + 2;
             grid_panel.Height = vertical_tiles_number * buttonSize.Height + 2;
 
+        }
+
+        private void DrawLabelsAroundGrid(int i, int j, Size buttonSize)
+        {
+            //Vertical labels
+            if (i == 0)
+            {
+                Label tmpLbl_Y = new Label
+                {
+                    Size = new Size(30, buttonSize.Height),
+                    Location = new Point(i, 21 + buttonSize.Height * j),
+                    BackColor = Color.Transparent,
+                    Text = j.ToString(),
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Font = new Font("Microsoft Sans Serif", 10, FontStyle.Regular),
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+
+                this.Controls.Add(tmpLbl_Y);
+            }
+            //Horizontal labels
+            if (j == 0)
+            {
+                Label tmpLbl_X = new Label
+                {
+                    Size = new Size(buttonSize.Width, 20),
+                    Location = new Point(31 + buttonSize.Width * i, j),
+                    BackColor = Color.Transparent,
+                    Text = i.ToString(),
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Font = new Font("Microsoft Sans Serif", 10, FontStyle.Regular),
+                    BorderStyle = BorderStyle.FixedSingle
+
+                };
+
+                this.Controls.Add(tmpLbl_X);
+            }
         }
 
         private void Tmp_Click(object sender, EventArgs e)
@@ -480,16 +490,11 @@ namespace AlphaStar
         {
             startButton = null;
             finishButton = null;
-
-            Console.WriteLine($"color counter: {buttonsWithColor.Count}");
-            foreach (Button b in buttonsWithColor)
-            {
-                Console.WriteLine($"color btn name: {b.Name} {b.BackColor}");
-            }
+            Node n = null;
 
             foreach (Button b in buttonsWithColor)
             {
-                Node n = (Node)b.Tag;
+                n = (Node)b.Tag;
                 n.color = Color.White;
                 b.BackColor = n.color;
            
@@ -498,12 +503,6 @@ namespace AlphaStar
                 b.Refresh();
                 
             }
-
-            Console.WriteLine($"color counter: {buttonsWithColor.Count}");
-            foreach (Button b in buttonsWithColor)
-            {
-                Console.WriteLine($"color btn name: {b.Name} {b.BackColor}");
-            }
             buttonsWithColor.Clear();
         }
 
@@ -511,21 +510,29 @@ namespace AlphaStar
         {
             startButton = null;
             finishButton = null;
+            Node n = null;
 
             foreach (Button b in buttonsWithObstacles)
             {
-                b.BackColor = Color.White;
+                n = (Node)b.Tag;
+                n.color = Color.White;
+                b.BackColor = n.color;
+
                 b.FlatAppearance.BorderSize = 1;
                 b.FlatAppearance.BorderColor = Color.Black;
+                b.Refresh();
             }
             buttonsWithObstacles.Clear();
 
             foreach (Button b in buttonsWithColor)
             {
-                b.Text = "";
-                b.BackColor = Color.White;
+                n = (Node)b.Tag;
+                n.color = Color.White;
+                b.BackColor = n.color;
+
                 b.FlatAppearance.BorderSize = 1;
                 b.FlatAppearance.BorderColor = Color.Black;
+                b.Refresh();
             }
             buttonsWithColor.Clear();
         }
@@ -537,8 +544,6 @@ namespace AlphaStar
             {
                 if(b.Text.Equals(""))
                 {
-
-
 
                     string[] buffer = b.Name.Split('_');
 
