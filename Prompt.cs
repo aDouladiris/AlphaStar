@@ -11,6 +11,7 @@ namespace AlphaStar
     static class Prompt
     {
 
+
         public static string ShowDialogSlowMotion(string text, string caption, int default_time)
         {
             Form prompt = new Form()
@@ -65,10 +66,11 @@ namespace AlphaStar
             prompt.Controls.Add(promptLabel);
             prompt.Controls.Add(slowmotion_Textbox);
             prompt.Controls.Add(confirmButton);
-            prompt.AcceptButton = confirmButton;  
+            prompt.AcceptButton = confirmButton;
 
             return prompt.ShowDialog() == DialogResult.OK ? slowmotion_Textbox.Text : $"{default_time}";
         }
+
 
         public static string[] ShowDialog(string text, string caption, int default_X, int default_Y)
         {
@@ -82,52 +84,52 @@ namespace AlphaStar
             };
 
             Size promptLabelSize = GetStringSize(text);
+            Size inputTextboxSize = GetStringSize("999");
+
+            string confirmButtonText = "Επόμενο";
+            Size confirmButtonSize = GetStringSize(confirmButtonText);
 
             Label promptLabel = new Label()
             {
                 TextAlign = ContentAlignment.MiddleCenter,
                 Size = promptLabelSize,
-                Location = new Point(prompt.Location.X, promptLabelSize.Height),
-                Text = text
+                Location = new Point((prompt.Width / 2) - (promptLabelSize.Width / 2), promptLabelSize.Height),
+                Text = text,
+                BorderStyle = BorderStyle.FixedSingle
             };
-
-            Size inputTextboxSize = GetStringSize("999");
 
             TextBox horizontal_axis_Textbox = new TextBox()
             {
-                Size = inputTextboxSize,                
+                Size = inputTextboxSize,
+                Location = new Point((prompt.Width / 2) - (inputTextboxSize.Width / 2), 5 + promptLabel.Location.Y + promptLabel.Height),
                 Text = $"{default_X}",
-                MaxLength = 3
+                MaxLength = 4,
+                BorderStyle = BorderStyle.FixedSingle
             };
             horizontal_axis_Textbox.KeyPress += InputTextbox_KeyPress;
 
             TextBox vertical_axis_Textbox = new TextBox()
             {
-                Size = inputTextboxSize,                
+                Size = inputTextboxSize,
+                Location = new Point((prompt.Width / 2) - (inputTextboxSize.Width / 2), 5 + horizontal_axis_Textbox.Location.Y + horizontal_axis_Textbox.Height),
                 Text = $"{default_Y}",
-                MaxLength = 3
+                MaxLength = 4,
+                BorderStyle = BorderStyle.FixedSingle
             };
             vertical_axis_Textbox.KeyPress += InputTextbox_KeyPress;
-
-            string confirmButtonText = "Επόμενο";
-            Size confirmButtonSize = GetStringSize(confirmButtonText);
 
             Button confirmButton = new Button()
             {
                 TextAlign = ContentAlignment.MiddleCenter,
                 Width = confirmButtonSize.Width,
-                Height = confirmButtonSize.Height*2,
-                Text = confirmButtonText,                
-                DialogResult = DialogResult.OK
+                Height = confirmButtonSize.Height + 5,
+                Text = confirmButtonText,
+                Location = new Point((prompt.Width / 2) - (confirmButtonSize.Width / 2), 5 + vertical_axis_Textbox.Location.Y + vertical_axis_Textbox.Height),
+                DialogResult = DialogResult.OK                
             };
 
-            
+            prompt.Height = 2 * (confirmButton.Location.Y + confirmButton.Height);
             prompt.Width = promptLabelSize.Width;
-
-            horizontal_axis_Textbox.Location = new Point((prompt.Width / 2) - (horizontal_axis_Textbox.Width /2), 10 + promptLabel.Location.Y + promptLabel.Height);
-            vertical_axis_Textbox.Location = new Point((prompt.Width / 2) - (vertical_axis_Textbox.Width / 2), 5 + horizontal_axis_Textbox.Location.Y + horizontal_axis_Textbox.Height);
-            confirmButton.Location = new Point((promptLabel.Width / 2) - 2 * (confirmButtonSize.Width / 2), 5 + vertical_axis_Textbox.Location.Y + vertical_axis_Textbox.Height);
-            prompt.Height = (confirmButton.Location.Y + 2 * confirmButton.Height - 5);
 
             confirmButton.Click += (sender, e) => { prompt.Close(); };
             prompt.Controls.Add(promptLabel);
@@ -151,16 +153,12 @@ namespace AlphaStar
 
         public static Size GetStringSize(string stringToMeasure)
         {
-
-            //Font stringFont = new FontConverter().ConvertFromString(stringToMeasure) as Font;
-            //Console.WriteLine("s: " + stringFont.Size);
+            Font stringFont = new Font("Microsoft Sans Serif", 12);
             Graphics graphs = new Label().CreateGraphics();
-
-            Font f = new Font("Microsoft Sans Serif", 14);
 
             string measuredStringWidth = stringToMeasure.Replace(" ", "_");
 
-            return graphs.MeasureString(measuredStringWidth, f).ToSize();
+            return graphs.MeasureString(measuredStringWidth, stringFont).ToSize();
         }
 
 

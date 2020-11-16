@@ -34,6 +34,17 @@ namespace AlphaStar
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
 
+            
+                  
+            obstacles_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - obstacles_button.Width - 5, obstacles_button.Location.Y);
+            algo_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - algo_button.Width - 5, algo_button.Location.Y);
+            clear_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clear_button.Width - 5, clear_button.Location.Y);
+            clearAll_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clearAll_button.Width - 5, clearAll_button.Location.Y);
+            debug_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - debug_button.Width - 5, debug_button.Location.Y);
+            resize_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - resize_button.Width - 5, resize_button.Location.Y);
+            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - timer_label.Width - 5, timer_label.Location.Y);
+            slow_motion_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - slow_motion_button.Width - 5, slow_motion_button.Location.Y);
+
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
         }
@@ -79,41 +90,8 @@ namespace AlphaStar
             //Resize panel
             grid_panel.Width = horizontal_tiles_number * buttonSize.Width + 2;
             grid_panel.Height = vertical_tiles_number * buttonSize.Height + 2;
-
+            exit_button.Width = 2 * exit_button.Width;
             exit_button.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, exit_button.Location.Y);
-            timer_label.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, timer_label.Location.Y);
-
-            List<Button> btns = new List<Button>
-            {
-                obstacles_button,
-                algo_button,
-                clear_button,
-                clearAll_button,
-                debug_button,
-                resize_button,
-                slow_motion_button
-            };
-
-            
-
-            foreach(Button b in btns)
-            {
-                b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
-                b.Width = Prompt.GetStringSize(b.Text).Width;
-                b.Height = Prompt.GetStringSize(b.Text).Height*2;
-            }
-
-            //Console.WriteLine("str: " + Prompt.GetStringSize(obstacles_button.Text).Width);
-            //Console.WriteLine("btn: " + obstacles_button.Width);
-
-            //Font stringFont = new FontConverter().ConvertFromString(obstacles_button.Text) as Font;
-            //Console.WriteLine("s: " + stringFont.Size);
-
-        }
-
-        public enum Buttons
-        {
-
         }
 
         private void DrawLabelsAroundGrid(int i, int j, Size buttonSize)
