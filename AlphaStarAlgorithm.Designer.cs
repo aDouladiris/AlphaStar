@@ -37,6 +37,7 @@
             this.debug_button = new System.Windows.Forms.Button();
             this.resize_button = new System.Windows.Forms.Button();
             this.timer_label = new System.Windows.Forms.Label();
+            this.slow_motion_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // exit_button
@@ -141,12 +142,23 @@
             // timer_label
             // 
             this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.timer_label.Location = new System.Drawing.Point(1610, 398);
+            this.timer_label.Location = new System.Drawing.Point(1610, 476);
             this.timer_label.Name = "timer_label";
             this.timer_label.Size = new System.Drawing.Size(60, 23);
             this.timer_label.TabIndex = 8;
-            this.timer_label.Text = "Timer";
             this.timer_label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // slow_motion_button
+            // 
+            this.slow_motion_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.slow_motion_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.slow_motion_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.slow_motion_button.Location = new System.Drawing.Point(1610, 403);
+            this.slow_motion_button.Name = "slow_motion_button";
+            this.slow_motion_button.Size = new System.Drawing.Size(60, 35);
+            this.slow_motion_button.TabIndex = 9;
+            this.slow_motion_button.Text = "Slow";
+            this.slow_motion_button.UseVisualStyleBackColor = false;
             // 
             // AlphaStarAlgorithm
             // 
@@ -154,6 +166,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1682, 675);
+            this.Controls.Add(this.slow_motion_button);
             this.Controls.Add(this.timer_label);
             this.Controls.Add(this.resize_button);
             this.Controls.Add(this.debug_button);
@@ -180,6 +193,7 @@
         private System.Windows.Forms.Button debug_button;
         private System.Windows.Forms.Button resize_button;
         private System.Windows.Forms.Label timer_label;
+        private System.Windows.Forms.Button slow_motion_button;
     }
 }
 

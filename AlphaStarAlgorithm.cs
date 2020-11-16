@@ -22,7 +22,7 @@ namespace AlphaStar
         Button finishButton = null;
         int vertical_tiles_number = 0;
         int horizontal_tiles_number = 0;
-        string[] axis_dimensions = Prompt.ShowDialog("Valte megethos", "Btn size", 80, 80);
+        string[] axis_dimensions = Prompt.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραγώνου του χάρτη", "Tile size", 80, 80);
         Size buttonSize;
 
         public AlphaStarAlgorithm()
@@ -40,6 +40,7 @@ namespace AlphaStar
             debug_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - debug_button.Width - 5, debug_button.Location.Y);
             resize_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - resize_button.Width - 5, resize_button.Location.Y);
             timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - timer_label.Width - 5, timer_label.Location.Y);
+            slow_motion_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - slow_motion_button.Width - 5, slow_motion_button.Location.Y);
 
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
@@ -223,23 +224,23 @@ namespace AlphaStar
             //    Console.WriteLine($"obstacle buttons: {b.Name}, {b.BackColor}");
             //}
 
-            if (startButton != null)
-                Console.WriteLine($"algo s button: {startButton.Name} {startButton.BackColor}");
+            //if (startButton != null)
+            //    Console.WriteLine($"algo s button: {startButton.Name} {startButton.BackColor}");
 
-            if (startButton.Tag != null)
-            {
-                Node s_Node = (Node)startButton.Tag;
-                Console.WriteLine($"algo s node: {s_Node.color}");
-            }
+            //if (startButton.Tag != null)
+            //{
+            //    Node s_Node = (Node)startButton.Tag;
+            //    Console.WriteLine($"algo s node: {s_Node.color}");
+            //}
 
-            if (finishButton != null)
-                Console.WriteLine($"algo e button: {finishButton.Name} {finishButton.BackColor}");
+            //if (finishButton != null)
+            //    Console.WriteLine($"algo e button: {finishButton.Name} {finishButton.BackColor}");
 
-            if (finishButton.Tag != null)
-            {
-                Node e_Node = (Node)finishButton.Tag;
-                Console.WriteLine($"algo e node: {e_Node.color}");
-            }
+            //if (finishButton.Tag != null)
+            //{
+            //    Node e_Node = (Node)finishButton.Tag;
+            //    Console.WriteLine($"algo e node: {e_Node.color}");
+            //}
 
 
             if (startButton == null)
@@ -608,7 +609,7 @@ namespace AlphaStar
             this.Refresh();
             grid_panel.Refresh();
 
-            string[] axis_dimensions = Prompt.ShowDialog("Valte megethos", "Btn size", 80, 80);
+            string[] axis_dimensions = Prompt.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραγώνου του χάρτη", "Tile size", 80, 80);
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
         }
