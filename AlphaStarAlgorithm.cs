@@ -23,6 +23,8 @@ namespace AlphaStar
         int vertical_tiles_number = 0;
         int horizontal_tiles_number = 0;
         string[] axis_dimensions = Prompt.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραγώνου του χάρτη", "Tile size", 80, 80);
+        bool isSlowMotionActive = false;
+        int time_in_ms = 0;
         Size buttonSize;
 
         public AlphaStarAlgorithm()
@@ -31,16 +33,6 @@ namespace AlphaStar
 
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
-
-            exit_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width-exit_button.Width - 5, exit_button.Location.Y);
-            obstacles_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - obstacles_button.Width - 5, obstacles_button.Location.Y);
-            algo_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - algo_button.Width - 5, algo_button.Location.Y);
-            clear_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clear_button.Width - 5, clear_button.Location.Y);
-            clearAll_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clearAll_button.Width - 5, clearAll_button.Location.Y);
-            debug_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - debug_button.Width - 5, debug_button.Location.Y);
-            resize_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - resize_button.Width - 5, resize_button.Location.Y);
-            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - timer_label.Width - 5, timer_label.Location.Y);
-            slow_motion_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - slow_motion_button.Width - 5, slow_motion_button.Location.Y);
 
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
@@ -87,6 +79,41 @@ namespace AlphaStar
             //Resize panel
             grid_panel.Width = horizontal_tiles_number * buttonSize.Width + 2;
             grid_panel.Height = vertical_tiles_number * buttonSize.Height + 2;
+
+            exit_button.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, exit_button.Location.Y);
+            timer_label.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, timer_label.Location.Y);
+
+            List<Button> btns = new List<Button>
+            {
+                obstacles_button,
+                algo_button,
+                clear_button,
+                clearAll_button,
+                debug_button,
+                resize_button,
+                slow_motion_button
+            };
+
+            
+
+            foreach(Button b in btns)
+            {
+                b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
+                b.Width = Prompt.GetStringSize(b.Text).Width;
+                b.Height = Prompt.GetStringSize(b.Text).Height*2;
+            }
+
+            //Console.WriteLine("str: " + Prompt.GetStringSize(obstacles_button.Text).Width);
+            //Console.WriteLine("btn: " + obstacles_button.Width);
+
+            //Font stringFont = new FontConverter().ConvertFromString(obstacles_button.Text) as Font;
+            //Console.WriteLine("s: " + stringFont.Size);
+
+        }
+
+        public enum Buttons
+        {
+
         }
 
         private void DrawLabelsAroundGrid(int i, int j, Size buttonSize)
@@ -217,31 +244,6 @@ namespace AlphaStar
 
         private void algo_button_Click(object sender, EventArgs e)
         {
-            //Console.WriteLine($"obstacle number: {buttonsWithObstacles.Count}");
-
-            //foreach (Button b in buttonsWithObstacles)
-            //{
-            //    Console.WriteLine($"obstacle buttons: {b.Name}, {b.BackColor}");
-            //}
-
-            //if (startButton != null)
-            //    Console.WriteLine($"algo s button: {startButton.Name} {startButton.BackColor}");
-
-            //if (startButton.Tag != null)
-            //{
-            //    Node s_Node = (Node)startButton.Tag;
-            //    Console.WriteLine($"algo s node: {s_Node.color}");
-            //}
-
-            //if (finishButton != null)
-            //    Console.WriteLine($"algo e button: {finishButton.Name} {finishButton.BackColor}");
-
-            //if (finishButton.Tag != null)
-            //{
-            //    Node e_Node = (Node)finishButton.Tag;
-            //    Console.WriteLine($"algo e node: {e_Node.color}");
-            //}
-
 
             if (startButton == null)
             {
@@ -291,6 +293,8 @@ namespace AlphaStar
                 }
 
                 Button currentNode_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
+                if (isSlowMotionActive)
+                    Thread.Sleep(time_in_ms);
                 currentNode_btn.BackColor = Color.Gray;
                 currentNode.color = currentNode_btn.BackColor;
                 currentNode_btn.Refresh();
@@ -313,10 +317,9 @@ namespace AlphaStar
                     if (closedSet.Contains(neighbour))
                         continue;
 
-                    //Button n_btn = (Button)grid_panel.Controls.Find(neighbour.X.ToString() + "_" + neighbour.Y.ToString(), false)[0];
-                    //n_btn.BackColor = Color.Orange;
-                    //n_btn.Refresh();
-                    //Thread.Sleep(200);
+
+                    //if(isSlowMotionActive)
+                    //    Thread.Sleep(time_in_ms);
 
 
                     int currentNodeToNeighbourNode = currentNode.G_cost + GetDistance(currentNode, neighbour);
@@ -329,14 +332,6 @@ namespace AlphaStar
                 }
             }
 
-            Console.WriteLine($"color counter: {buttonsWithColor.Count}");
-            foreach (Button b in buttonsWithColor)
-            {
-                Console.WriteLine($"color btn name: {b.Name} {b.BackColor}");
-                Console.WriteLine("Brightness: " + b.BackColor.GetBrightness());
-                Console.WriteLine("Hue: " + b.BackColor.GetHue());
-                Console.WriteLine("Saturation: " + b.BackColor.GetSaturation());
-            }
 
             stopwatch.Stop();
             timerStr = stopwatch.ElapsedMilliseconds.ToString() + " ms";
@@ -391,12 +386,12 @@ namespace AlphaStar
                         {
                             b.BackColor = Color.Lime;
 
-                            //if (!buttonsWithColor.Contains(b))
-                            //    buttonsWithColor.Add(b);
+                            b.Refresh();
+                            if (isSlowMotionActive)
+                                Thread.Sleep(time_in_ms);
                         }
 
-                        b.Refresh();
-                        //Thread.Sleep(100);                        
+
                     }
                 }
             }
@@ -483,14 +478,13 @@ namespace AlphaStar
                         {
                             tmp.color = Color.Green;
                             btn.BackColor = tmp.color;
+                            btn.Text = btn.Name;
                             buttonsWithColor.Add(btn);
-                            Console.WriteLine("Entered: " + btn.BackColor);
+
+                            if (isSlowMotionActive)
+                                Thread.Sleep(time_in_ms);
                         }
-                        //else if (tmp.color == Color.Green)
-                        //{
-                        //    tmp.color = Color.Gray;
-                        //    btn.BackColor = tmp.color;
-                        //}
+
                         
                         btn.Refresh();
                     }                    
@@ -517,13 +511,14 @@ namespace AlphaStar
             finishButton = null;
             Node n;
 
-            timer_label.Text = "";
+            
             foreach (Button b in buttonsWithColor)
             {
                 n = (Node)b.Tag;
                 n.color = Color.White;
                 b.BackColor = n.color;
-           
+
+                b.Text = "";
                 b.FlatAppearance.BorderSize = 1;
                 b.FlatAppearance.BorderColor = Color.Black;
                 b.Refresh();                
@@ -614,6 +609,20 @@ namespace AlphaStar
             TransformGrid();
         }
 
-
+        private void slow_motion_button_Click(object sender, EventArgs e)
+        {
+            if(!isSlowMotionActive)
+            {
+                time_in_ms = int.Parse(Prompt.ShowDialogSlowMotion("Διαλέξτε το slow motion σε milliseconds", "Slow motion", 500));
+                isSlowMotionActive = true;
+                slow_motion_button.BackColor = Color.Lime;
+            }
+            else
+            {
+                time_in_ms = 0;
+                isSlowMotionActive = false;
+                slow_motion_button.BackColor = Color.SlateGray;
+            }
+        }
     }
 }
