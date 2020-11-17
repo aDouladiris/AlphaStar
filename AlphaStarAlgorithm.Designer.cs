@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.exit_button = new System.Windows.Forms.Button();
             this.grid_panel = new System.Windows.Forms.Panel();
             this.obstacles_button = new System.Windows.Forms.Button();
@@ -39,7 +38,6 @@
             this.resize_button = new System.Windows.Forms.Button();
             this.timer_label = new System.Windows.Forms.Label();
             this.slow_motion_button = new System.Windows.Forms.Button();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.duration_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -145,7 +143,7 @@
             // timer_label
             // 
             this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.timer_label.Location = new System.Drawing.Point(1610, 502);
+            this.timer_label.Location = new System.Drawing.Point(1610, 492);
             this.timer_label.Name = "timer_label";
             this.timer_label.Size = new System.Drawing.Size(60, 43);
             this.timer_label.TabIndex = 8;
@@ -165,20 +163,15 @@
             this.slow_motion_button.UseVisualStyleBackColor = false;
             this.slow_motion_button.Click += new System.EventHandler(this.slow_motion_button_Click);
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
             // duration_label
             // 
             this.duration_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.duration_label.Location = new System.Drawing.Point(1610, 459);
             this.duration_label.Name = "duration_label";
-            this.duration_label.Size = new System.Drawing.Size(60, 43);
+            this.duration_label.Size = new System.Drawing.Size(60, 24);
             this.duration_label.TabIndex = 12;
-            this.duration_label.Text = "Διάρκεια σε ms:";
-            this.duration_label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.duration_label.Text = "Διάρκεια";
+            this.duration_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // AlphaStarAlgorithm
             // 
@@ -215,7 +208,6 @@
         private System.Windows.Forms.Button resize_button;
         private System.Windows.Forms.Label timer_label;
         private System.Windows.Forms.Button slow_motion_button;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Label duration_label;
     }
 }

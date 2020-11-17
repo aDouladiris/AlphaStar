@@ -39,12 +39,12 @@ namespace AlphaStar
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
 
-            //duration_label.Width = timer_label.Width;
-            duration_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - 2*timer_label.Width, duration_label.Location.Y);
+            duration_label.Width = duration_label.Width * 2;
+            duration_label.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, duration_label.Location.Y);
             //duration_label.BorderStyle = BorderStyle.FixedSingle;
 
             //timer_label.Width = 2 * timer_label.Width;
-            timer_label.Location = new Point(duration_label.Location.X + duration_label.Width, duration_label.Location.Y);
+            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - 2 * timer_label.Width, timer_label.Location.Y);
             //timer_label.BorderStyle = BorderStyle.FixedSingle;
 
 
@@ -542,7 +542,7 @@ namespace AlphaStar
                 n.color = Color.White;
                 b.BackColor = n.color;
 
-                b.TextAlign = "";
+                b.Text = "";
                 b.FlatAppearance.BorderSize = 1;
                 b.FlatAppearance.BorderColor = Color.Black;
                 b.Refresh();
