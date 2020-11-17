@@ -22,7 +22,7 @@ namespace AlphaStar
         Button finishButton = null;
         int vertical_tiles_number = 0;
         int horizontal_tiles_number = 0;
-        string[] axis_dimensions = Prompt.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραγώνου του χάρτη", "Tile size", 80, 80);
+        string[] axis_dimensions = Prompt.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραπλεύρου του χάρτη", "Μέγεθος Τετράπλευρου", 80, 80);
         bool isSlowMotionActive = false;
         int time_in_ms = 0;
         Size buttonSize;
@@ -32,18 +32,9 @@ namespace AlphaStar
             InitializeComponent();
 
             this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
-
-            
+            this.WindowState = FormWindowState.Maximized;          
                   
-            obstacles_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - obstacles_button.Width - 5, obstacles_button.Location.Y);
-            algo_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - algo_button.Width - 5, algo_button.Location.Y);
-            clear_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clear_button.Width - 5, clear_button.Location.Y);
-            clearAll_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - clearAll_button.Width - 5, clearAll_button.Location.Y);
-            debug_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - debug_button.Width - 5, debug_button.Location.Y);
-            resize_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - resize_button.Width - 5, resize_button.Location.Y);
-            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - timer_label.Width - 5, timer_label.Location.Y);
-            slow_motion_button.Location = new Point(Screen.PrimaryScreen.Bounds.Width - slow_motion_button.Width - 5, slow_motion_button.Location.Y);
+
 
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
@@ -90,8 +81,19 @@ namespace AlphaStar
             //Resize panel
             grid_panel.Width = horizontal_tiles_number * buttonSize.Width + 2;
             grid_panel.Height = vertical_tiles_number * buttonSize.Height + 2;
-            exit_button.Width = 2 * exit_button.Width;
-            exit_button.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, exit_button.Location.Y);
+
+            timer_label.Width = 2 * timer_label.Width;
+            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - timer_label.Width - 5, timer_label.Location.Y);
+            timer_label.BorderStyle = BorderStyle.FixedSingle;
+
+            List<Button> btns = new List<Button> { exit_button, obstacles_button, algo_button, clear_button, clearAll_button, debug_button, resize_button, slow_motion_button };
+
+            foreach(Button b in btns)
+            {
+                b.Width = 2 * b.Width;
+                b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
+            }
+
         }
 
         private void DrawLabelsAroundGrid(int i, int j, Size buttonSize)
@@ -582,7 +584,7 @@ namespace AlphaStar
             this.Refresh();
             grid_panel.Refresh();
 
-            string[] axis_dimensions = Prompt.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραγώνου του χάρτη", "Tile size", 80, 80);
+            string[] axis_dimensions = Prompt.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραπλεύρου του χάρτη", "Μέγεθος Τετράπλευρου", 80, 80);
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
         }

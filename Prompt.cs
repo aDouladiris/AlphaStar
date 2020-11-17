@@ -80,60 +80,79 @@ namespace AlphaStar
             {
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = caption,
-                StartPosition = FormStartPosition.CenterScreen
+                StartPosition = FormStartPosition.CenterScreen,
+                AutoSize = true
             };
 
-            Size promptLabelSize = GetStringSize(text);
-            Size inputTextboxSize = GetStringSize("999");
-
-            string confirmButtonText = "Επόμενο";
-            Size confirmButtonSize = GetStringSize(confirmButtonText);
+            Size promptLabelSize = GetStringSize(text);            
 
             Label promptLabel = new Label()
-            {
-                TextAlign = ContentAlignment.MiddleCenter,
+            {                
                 Size = promptLabelSize,
-                Location = new Point((prompt.Width / 2) - (promptLabelSize.Width / 2), promptLabelSize.Height),
+                Location = new Point(-5, promptLabelSize.Height),
                 Text = text,
-                BorderStyle = BorderStyle.FixedSingle
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Size inputTextboxSize = GetStringSize("999");
+
+            Size horizontalAxisLabelSize = GetStringSize("Οριζόντια πλευρά τετραπλεύρου:");
+            Label horizontal_axis_Label = new Label()
+            {
+                Width = horizontalAxisLabelSize.Width,
+                Height = inputTextboxSize.Height + 3,
+                Text = "Οριζόντια πλευρά τετραπλεύρου:",
+                Location = new Point(20, promptLabel.Location.Y + (2 * promptLabel.Height))
             };
 
             TextBox horizontal_axis_Textbox = new TextBox()
             {
                 Size = inputTextboxSize,
-                Location = new Point((prompt.Width / 2) - (inputTextboxSize.Width / 2), 5 + promptLabel.Location.Y + promptLabel.Height),
+                Location = new Point((horizontal_axis_Label.Location.X + horizontal_axis_Label.Width + 5), horizontal_axis_Label.Location.Y),
                 Text = $"{default_X}",
-                MaxLength = 4,
-                BorderStyle = BorderStyle.FixedSingle
+                MaxLength = 4,                
             };
             horizontal_axis_Textbox.KeyPress += InputTextbox_KeyPress;
+
+            Size verticalAxisLabelSize = GetStringSize("Κάθετη πλευρά τετραπλεύρου:");
+            Label vertical_axis_Label = new Label()
+            {
+                Width = verticalAxisLabelSize.Width,
+                Height = inputTextboxSize.Height + 3,
+                Text = "Κάθετη πλευρά τετραπλεύρου:",
+                Location = new Point(20, horizontal_axis_Textbox.Location.Y + (1 * horizontal_axis_Textbox.Height))
+            };
 
             TextBox vertical_axis_Textbox = new TextBox()
             {
                 Size = inputTextboxSize,
-                Location = new Point((prompt.Width / 2) - (inputTextboxSize.Width / 2), 5 + horizontal_axis_Textbox.Location.Y + horizontal_axis_Textbox.Height),
+                Location = new Point(horizontal_axis_Textbox.Location.X, vertical_axis_Label.Location.Y),
                 Text = $"{default_Y}",
-                MaxLength = 4,
-                BorderStyle = BorderStyle.FixedSingle
+                MaxLength = 4
             };
             vertical_axis_Textbox.KeyPress += InputTextbox_KeyPress;
+
+            string confirmButtonText = "Επόμενο";
+            Size confirmButtonSize = GetStringSize(confirmButtonText);
 
             Button confirmButton = new Button()
             {
                 TextAlign = ContentAlignment.MiddleCenter,
-                Width = confirmButtonSize.Width,
-                Height = confirmButtonSize.Height + 5,
+                Width = confirmButtonSize.Width *2,
+                Height = confirmButtonSize.Height + 10,
                 Text = confirmButtonText,
-                Location = new Point((prompt.Width / 2) - (confirmButtonSize.Width / 2), 5 + vertical_axis_Textbox.Location.Y + vertical_axis_Textbox.Height),
+                Location = new Point((prompt.Width / 2) - (confirmButtonSize.Width / 2) - 10, vertical_axis_Textbox.Location.Y + 2*vertical_axis_Textbox.Height),
                 DialogResult = DialogResult.OK                
             };
 
-            prompt.Height = 2 * (confirmButton.Location.Y + confirmButton.Height);
-            prompt.Width = promptLabelSize.Width;
+            prompt.Height = (confirmButton.Location.Y + confirmButton.Height);
+            
 
             confirmButton.Click += (sender, e) => { prompt.Close(); };
             prompt.Controls.Add(promptLabel);
             prompt.Controls.Add(horizontal_axis_Textbox);
+            prompt.Controls.Add(horizontal_axis_Label);
+            prompt.Controls.Add(vertical_axis_Label);
             prompt.Controls.Add(vertical_axis_Textbox);
             prompt.Controls.Add(confirmButton);
             prompt.AcceptButton = confirmButton;
@@ -153,7 +172,7 @@ namespace AlphaStar
 
         public static Size GetStringSize(string stringToMeasure)
         {
-            Font stringFont = new Font("Microsoft Sans Serif", 12);
+            Font stringFont = new Font("Microsoft Sans Serif", 9);
             Graphics graphs = new Label().CreateGraphics();
 
             string measuredStringWidth = stringToMeasure.Replace(" ", "_");

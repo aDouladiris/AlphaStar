@@ -38,6 +38,7 @@
             this.resize_button = new System.Windows.Forms.Button();
             this.timer_label = new System.Windows.Forms.Label();
             this.slow_motion_button = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // exit_button
@@ -142,7 +143,7 @@
             // timer_label
             // 
             this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.timer_label.Location = new System.Drawing.Point(1610, 476);
+            this.timer_label.Location = new System.Drawing.Point(1610, 458);
             this.timer_label.Name = "timer_label";
             this.timer_label.Size = new System.Drawing.Size(60, 43);
             this.timer_label.TabIndex = 8;
@@ -161,12 +162,20 @@
             this.slow_motion_button.UseVisualStyleBackColor = false;
             this.slow_motion_button.Click += new System.EventHandler(this.slow_motion_button_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(1523, 620);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 10;
+            // 
             // AlphaStarAlgorithm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1682, 675);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.slow_motion_button);
             this.Controls.Add(this.timer_label);
             this.Controls.Add(this.resize_button);
@@ -180,6 +189,7 @@
             this.Name = "AlphaStarAlgorithm";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -195,6 +205,7 @@
         private System.Windows.Forms.Button resize_button;
         private System.Windows.Forms.Label timer_label;
         private System.Windows.Forms.Button slow_motion_button;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
