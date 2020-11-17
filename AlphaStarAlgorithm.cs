@@ -39,15 +39,15 @@ namespace AlphaStar
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
 
-            timer_label.Width = 2 * timer_label.Width;
-            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - timer_label.Width - 5, timer_label.Location.Y);
-            timer_label.TextAlign = ContentAlignment.MiddleCenter;
-            timer_label.BorderStyle = BorderStyle.FixedSingle;
+            //duration_label.Width = timer_label.Width;
+            duration_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - 2*timer_label.Width, duration_label.Location.Y);
+            //duration_label.BorderStyle = BorderStyle.FixedSingle;
 
-            duration_label.Width = timer_label.Width;
-            duration_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - duration_label.Width - 5, duration_label.Location.Y);
-            duration_label.TextAlign = ContentAlignment.MiddleCenter;
-            duration_label.BorderStyle = BorderStyle.FixedSingle;
+            //timer_label.Width = 2 * timer_label.Width;
+            timer_label.Location = new Point(duration_label.Location.X + duration_label.Width, duration_label.Location.Y);
+            //timer_label.BorderStyle = BorderStyle.FixedSingle;
+
+
 
             List<Button> btns = new List<Button> { exit_button, obstacles_button, algo_button, clear_button, clearAll_button, debug_button, resize_button, slow_motion_button };
 
@@ -295,7 +295,7 @@ namespace AlphaStar
                 {
                     RetracePath(startingNode, endingNode);
                     stopwatch.Stop();
-                    timerStr = stopwatch.ElapsedMilliseconds.ToString() + " ms";
+                    timerStr = stopwatch.ElapsedMilliseconds.ToString();
                     timer_label.Text = timerStr;
                     return;
                 }
@@ -322,7 +322,7 @@ namespace AlphaStar
 
 
             stopwatch.Stop();
-            timerStr = stopwatch.ElapsedMilliseconds.ToString() + " ms";
+            timerStr = stopwatch.ElapsedMilliseconds.ToString();
             timer_label.Size = Prompt.GetStringSize(timerStr);
             timer_label.Text = timerStr;
             MessageBox.Show("Path not found");
@@ -499,8 +499,8 @@ namespace AlphaStar
             startButton = null;
             finishButton = null;
             Node n;
+            timer_label.Text = "";
 
-            
             foreach (Button b in buttonsWithColor)
             {
                 n = (Node)b.Tag;
@@ -542,6 +542,7 @@ namespace AlphaStar
                 n.color = Color.White;
                 b.BackColor = n.color;
 
+                b.TextAlign = "";
                 b.FlatAppearance.BorderSize = 1;
                 b.FlatAppearance.BorderColor = Color.Black;
                 b.Refresh();
@@ -602,15 +603,17 @@ namespace AlphaStar
         {
             if(!isSlowMotionActive)
             {
-                time_in_ms = int.Parse(Prompt.ShowDialogSlowMotion("Διαλέξτε το slow motion σε milliseconds", "Slow motion", 500));
+                time_in_ms = int.Parse(Prompt.ShowDialogSlowMotion("Διαλέξτε τα milliseconds του slow motion", "Slow Μotion", 500));
                 isSlowMotionActive = true;
                 slow_motion_button.BackColor = Color.Lime;
+                slow_motion_button.ForeColor = Color.Black;
             }
             else
             {
                 time_in_ms = 0;
                 isSlowMotionActive = false;
                 slow_motion_button.BackColor = Color.SlateGray;
+                slow_motion_button.ForeColor = Color.White;
             }
         }
 

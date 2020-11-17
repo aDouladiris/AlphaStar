@@ -144,12 +144,12 @@
             // 
             // timer_label
             // 
-            this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.timer_label.Location = new System.Drawing.Point(1610, 502);
             this.timer_label.Name = "timer_label";
             this.timer_label.Size = new System.Drawing.Size(60, 43);
             this.timer_label.TabIndex = 8;
-            this.timer_label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.timer_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.timer_label.Click += new System.EventHandler(this.timer_label_Click);
             // 
             // slow_motion_button
@@ -173,11 +173,11 @@
             // duration_label
             // 
             this.duration_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.duration_label.Location = new System.Drawing.Point(1581, 459);
+            this.duration_label.Location = new System.Drawing.Point(1610, 459);
             this.duration_label.Name = "duration_label";
-            this.duration_label.Size = new System.Drawing.Size(89, 43);
+            this.duration_label.Size = new System.Drawing.Size(60, 43);
             this.duration_label.TabIndex = 12;
-            this.duration_label.Text = "Διάρκεια σε ms";
+            this.duration_label.Text = "Διάρκεια σε ms:";
             this.duration_label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // AlphaStarAlgorithm

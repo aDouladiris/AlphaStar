@@ -38,9 +38,10 @@ namespace AlphaStar
             TextBox slowmotion_Textbox = new TextBox()
             {
                 Size = inputTextboxSize,
-                Location = new Point((prompt.Width / 2) - 3 * (inputTextboxSize.Width / 2), 10 + promptLabel.Location.Y + promptLabel.Height),
+                Location = new Point((prompt.Width / 2) - 2 * (inputTextboxSize.Width / 2) - 5, 10 + promptLabel.Location.Y + promptLabel.Height),
                 Text = $"{default_time}",
-                MaxLength = 5
+                MaxLength = 5,
+                TextAlign = HorizontalAlignment.Center
             };
             slowmotion_Textbox.KeyPress += InputTextbox_KeyPress;
 
@@ -51,16 +52,15 @@ namespace AlphaStar
             {
                 TextAlign = ContentAlignment.MiddleCenter,
                 Width = confirmButtonSize.Width * 2,
-                Height = confirmButtonSize.Height * 2,
+                Height = confirmButtonSize.Height + 10,
                 Text = confirmButtonText,
-                Location = new Point((promptLabel.Width / 2) - 2 * (confirmButtonSize.Width / 2), 5 + slowmotion_Textbox.Location.Y + slowmotion_Textbox.Height),
+                Location = new Point((prompt.Width / 2) - 3*(confirmButtonSize.Width / 2), slowmotion_Textbox.Location.Y + 2 * slowmotion_Textbox.Height),
                 DialogResult = DialogResult.OK
             };
 
             prompt.Height = (confirmButton.Location.Y + 3 * confirmButton.Height);
             prompt.Width = promptLabelSize.Width + 15;
 
-            Console.WriteLine(prompt.Location.X - promptLabel.Location.X);
 
             confirmButton.Click += (sender, e) => { prompt.Close(); };
             prompt.Controls.Add(promptLabel);
@@ -109,7 +109,8 @@ namespace AlphaStar
                 Size = inputTextboxSize,
                 Location = new Point((horizontal_axis_Label.Location.X + horizontal_axis_Label.Width + 5), horizontal_axis_Label.Location.Y),
                 Text = $"{default_X}",
-                MaxLength = 4,                
+                MaxLength = 4,
+                TextAlign = HorizontalAlignment.Center
             };
             horizontal_axis_Textbox.KeyPress += InputTextbox_KeyPress;
 
@@ -127,7 +128,8 @@ namespace AlphaStar
                 Size = inputTextboxSize,
                 Location = new Point(horizontal_axis_Textbox.Location.X, vertical_axis_Label.Location.Y),
                 Text = $"{default_Y}",
-                MaxLength = 4
+                MaxLength = 4,
+                TextAlign = HorizontalAlignment.Center
             };
             vertical_axis_Textbox.KeyPress += InputTextbox_KeyPress;
 
@@ -144,7 +146,7 @@ namespace AlphaStar
                 DialogResult = DialogResult.OK                
             };
 
-            prompt.Width = prompt.Width + 20;
+            prompt.Width += 20;
             prompt.Height = confirmButton.Location.Y + 3*confirmButton.Height;
 
 
