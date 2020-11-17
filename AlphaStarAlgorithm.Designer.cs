@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.exit_button = new System.Windows.Forms.Button();
             this.grid_panel = new System.Windows.Forms.Panel();
             this.obstacles_button = new System.Windows.Forms.Button();
@@ -38,7 +39,8 @@
             this.resize_button = new System.Windows.Forms.Button();
             this.timer_label = new System.Windows.Forms.Label();
             this.slow_motion_button = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.duration_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // exit_button
@@ -65,109 +67,118 @@
             // obstacles_button
             // 
             this.obstacles_button.BackColor = System.Drawing.Color.DodgerBlue;
-            this.obstacles_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.obstacles_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.obstacles_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.obstacles_button.Location = new System.Drawing.Point(1610, 67);
             this.obstacles_button.Name = "obstacles_button";
             this.obstacles_button.Size = new System.Drawing.Size(60, 35);
             this.obstacles_button.TabIndex = 2;
-            this.obstacles_button.Text = "Black";
+            this.obstacles_button.Text = "Create Obstacles";
             this.obstacles_button.UseVisualStyleBackColor = false;
             this.obstacles_button.Click += new System.EventHandler(this.obstacles_button_Click);
             // 
             // algo_button
             // 
             this.algo_button.BackColor = System.Drawing.Color.DodgerBlue;
-            this.algo_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.algo_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.algo_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.algo_button.Location = new System.Drawing.Point(1610, 124);
             this.algo_button.Name = "algo_button";
             this.algo_button.Size = new System.Drawing.Size(60, 35);
             this.algo_button.TabIndex = 3;
-            this.algo_button.Text = "Algo";
+            this.algo_button.Text = "Run A*";
             this.algo_button.UseVisualStyleBackColor = false;
             this.algo_button.Click += new System.EventHandler(this.algo_button_Click);
             // 
             // clear_button
             // 
             this.clear_button.BackColor = System.Drawing.Color.DodgerBlue;
-            this.clear_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.clear_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.clear_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.clear_button.Location = new System.Drawing.Point(1610, 180);
             this.clear_button.Name = "clear_button";
             this.clear_button.Size = new System.Drawing.Size(60, 35);
             this.clear_button.TabIndex = 4;
-            this.clear_button.Text = "Clear";
+            this.clear_button.Text = "Clear Path";
             this.clear_button.UseVisualStyleBackColor = false;
             this.clear_button.Click += new System.EventHandler(this.clear_button_Click);
             // 
             // clearAll_button
             // 
             this.clearAll_button.BackColor = System.Drawing.Color.DodgerBlue;
-            this.clearAll_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.clearAll_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.clearAll_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.clearAll_button.Location = new System.Drawing.Point(1610, 238);
             this.clearAll_button.Name = "clearAll_button";
             this.clearAll_button.Size = new System.Drawing.Size(60, 35);
             this.clearAll_button.TabIndex = 5;
-            this.clearAll_button.Text = "Clear All";
+            this.clearAll_button.Text = "Clear Grid";
             this.clearAll_button.UseVisualStyleBackColor = false;
             this.clearAll_button.Click += new System.EventHandler(this.clearAll_button_Click);
             // 
             // debug_button
             // 
             this.debug_button.BackColor = System.Drawing.Color.DodgerBlue;
-            this.debug_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.debug_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.debug_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.debug_button.Location = new System.Drawing.Point(1610, 293);
             this.debug_button.Name = "debug_button";
             this.debug_button.Size = new System.Drawing.Size(60, 35);
             this.debug_button.TabIndex = 6;
-            this.debug_button.Text = "Debug";
+            this.debug_button.Text = "Show Axis";
             this.debug_button.UseVisualStyleBackColor = false;
             this.debug_button.Click += new System.EventHandler(this.debug_button_Click);
             // 
             // resize_button
             // 
             this.resize_button.BackColor = System.Drawing.Color.DodgerBlue;
-            this.resize_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.resize_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.resize_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.resize_button.Location = new System.Drawing.Point(1610, 346);
             this.resize_button.Name = "resize_button";
             this.resize_button.Size = new System.Drawing.Size(60, 35);
             this.resize_button.TabIndex = 7;
-            this.resize_button.Text = "Resize";
+            this.resize_button.Text = "Resize Grid";
             this.resize_button.UseVisualStyleBackColor = false;
             this.resize_button.Click += new System.EventHandler(this.resize_button_Click);
             // 
             // timer_label
             // 
-            this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.timer_label.Location = new System.Drawing.Point(1610, 458);
+            this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.timer_label.Location = new System.Drawing.Point(1610, 502);
             this.timer_label.Name = "timer_label";
             this.timer_label.Size = new System.Drawing.Size(60, 43);
             this.timer_label.TabIndex = 8;
             this.timer_label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.timer_label.Click += new System.EventHandler(this.timer_label_Click);
             // 
             // slow_motion_button
             // 
             this.slow_motion_button.BackColor = System.Drawing.Color.SlateGray;
-            this.slow_motion_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.slow_motion_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.slow_motion_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.slow_motion_button.Location = new System.Drawing.Point(1610, 403);
             this.slow_motion_button.Name = "slow_motion_button";
             this.slow_motion_button.Size = new System.Drawing.Size(60, 35);
             this.slow_motion_button.TabIndex = 9;
-            this.slow_motion_button.Text = "Slow";
+            this.slow_motion_button.Text = "Slow Motion";
             this.slow_motion_button.UseVisualStyleBackColor = false;
             this.slow_motion_button.Click += new System.EventHandler(this.slow_motion_button_Click);
             // 
-            // textBox1
+            // contextMenuStrip1
             // 
-            this.textBox1.Location = new System.Drawing.Point(1523, 620);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 10;
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // duration_label
+            // 
+            this.duration_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.duration_label.Location = new System.Drawing.Point(1581, 459);
+            this.duration_label.Name = "duration_label";
+            this.duration_label.Size = new System.Drawing.Size(89, 43);
+            this.duration_label.TabIndex = 12;
+            this.duration_label.Text = "Διάρκεια σε ms";
+            this.duration_label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // AlphaStarAlgorithm
             // 
@@ -175,7 +186,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1682, 675);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.duration_label);
             this.Controls.Add(this.slow_motion_button);
             this.Controls.Add(this.timer_label);
             this.Controls.Add(this.resize_button);
@@ -189,7 +200,6 @@
             this.Name = "AlphaStarAlgorithm";
             this.Text = "Form1";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -205,7 +215,8 @@
         private System.Windows.Forms.Button resize_button;
         private System.Windows.Forms.Label timer_label;
         private System.Windows.Forms.Button slow_motion_button;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Label duration_label;
     }
 }
 

@@ -80,8 +80,7 @@ namespace AlphaStar
             {
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = caption,
-                StartPosition = FormStartPosition.CenterScreen,
-                AutoSize = true
+                StartPosition = FormStartPosition.CenterScreen
             };
 
             Size promptLabelSize = GetStringSize(text);            
@@ -145,8 +144,9 @@ namespace AlphaStar
                 DialogResult = DialogResult.OK                
             };
 
-            prompt.Height = (confirmButton.Location.Y + confirmButton.Height);
-            
+            prompt.Width = prompt.Width + 20;
+            prompt.Height = confirmButton.Location.Y + 3*confirmButton.Height;
+
 
             confirmButton.Click += (sender, e) => { prompt.Close(); };
             prompt.Controls.Add(promptLabel);

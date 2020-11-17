@@ -38,6 +38,25 @@ namespace AlphaStar
 
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
+
+            timer_label.Width = 2 * timer_label.Width;
+            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - timer_label.Width - 5, timer_label.Location.Y);
+            timer_label.TextAlign = ContentAlignment.MiddleCenter;
+            timer_label.BorderStyle = BorderStyle.FixedSingle;
+
+            duration_label.Width = timer_label.Width;
+            duration_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - duration_label.Width - 5, duration_label.Location.Y);
+            duration_label.TextAlign = ContentAlignment.MiddleCenter;
+            duration_label.BorderStyle = BorderStyle.FixedSingle;
+
+            List<Button> btns = new List<Button> { exit_button, obstacles_button, algo_button, clear_button, clearAll_button, debug_button, resize_button, slow_motion_button };
+
+            foreach (Button b in btns)
+            {
+                if (!b.Equals(exit_button))
+                    b.Width = 2 * b.Width;
+                b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
+            }
         }
 
         private void TransformGrid()
@@ -82,17 +101,7 @@ namespace AlphaStar
             grid_panel.Width = horizontal_tiles_number * buttonSize.Width + 2;
             grid_panel.Height = vertical_tiles_number * buttonSize.Height + 2;
 
-            timer_label.Width = 2 * timer_label.Width;
-            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - timer_label.Width - 5, timer_label.Location.Y);
-            timer_label.BorderStyle = BorderStyle.FixedSingle;
 
-            List<Button> btns = new List<Button> { exit_button, obstacles_button, algo_button, clear_button, clearAll_button, debug_button, resize_button, slow_motion_button };
-
-            foreach(Button b in btns)
-            {
-                b.Width = 2 * b.Width;
-                b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
-            }
 
         }
 
@@ -287,7 +296,6 @@ namespace AlphaStar
                     RetracePath(startingNode, endingNode);
                     stopwatch.Stop();
                     timerStr = stopwatch.ElapsedMilliseconds.ToString() + " ms";
-                    timer_label.Size = Prompt.GetStringSize(timerStr);
                     timer_label.Text = timerStr;
                     return;
                 }
@@ -376,14 +384,14 @@ namespace AlphaStar
                 }
             }
 
-            Console.WriteLine($"color counter: {buttonsWithColor.Count}");
-            foreach (Button b in buttonsWithColor)
-            {
-                Console.WriteLine($"color btn name: {b.Name} {b.BackColor}");
-                Console.WriteLine("Brightness: " + b.BackColor.GetBrightness());
-                Console.WriteLine("Hue: " + b.BackColor.GetHue());
-                Console.WriteLine("Saturation: " + b.BackColor.GetSaturation());
-            }
+            //Console.WriteLine($"color counter: {buttonsWithColor.Count}");
+            //foreach (Button b in buttonsWithColor)
+            //{
+            //    Console.WriteLine($"color btn name: {b.Name} {b.BackColor}");
+            //    Console.WriteLine("Brightness: " + b.BackColor.GetBrightness());
+            //    Console.WriteLine("Hue: " + b.BackColor.GetHue());
+            //    Console.WriteLine("Saturation: " + b.BackColor.GetSaturation());
+            //}
 
         }
 
@@ -458,7 +466,8 @@ namespace AlphaStar
                         {
                             tmp.color = Color.Green;
                             btn.BackColor = tmp.color;
-                            btn.Text = btn.Name;
+                            if (buttonSize.Width >= 50)
+                                btn.Text = btn.Name;
                             buttonsWithColor.Add(btn);
 
                             if (isSlowMotionActive)
@@ -603,6 +612,11 @@ namespace AlphaStar
                 isSlowMotionActive = false;
                 slow_motion_button.BackColor = Color.SlateGray;
             }
+        }
+
+        private void timer_label_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
