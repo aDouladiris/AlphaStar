@@ -271,8 +271,14 @@ namespace AlphaStar
 
                     Button btn = GetButtonByCoords(openSet[i].X, openSet[i].Y);
 
-                    if(buttonSize.Width >= 50)
+                    if (buttonSize.Width >= 50 && !btn.Text.StartsWith("F: ") )
+                    {
                         btn.Text = "F: " + openSet[i].F_cost.ToString() + "\nG: " + openSet[i].G_cost.ToString() + "\nH: " + openSet[i].H_cost;
+                        btn.Refresh();
+                        if (isSlowMotionActive)
+                            Thread.Sleep(time_in_ms);
+                    }
+                        
 
                     if (openSet[i].F_cost < currentNode.F_cost)                    
                         currentNode = openSet[i];
@@ -282,11 +288,16 @@ namespace AlphaStar
                 }
 
                 Button currentNode_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
-                if (isSlowMotionActive)
-                    Thread.Sleep(time_in_ms);
+
+                if (currentNode_btn.BackColor == Color.Gray)
+                    continue;
+
                 currentNode_btn.BackColor = Color.Gray;
                 currentNode.color = currentNode_btn.BackColor;
-                currentNode_btn.Refresh();
+
+                //currentNode_btn.Refresh();
+                //if (isSlowMotionActive)
+                //    Thread.Sleep(time_in_ms);
 
                 openSet.Remove(currentNode);
                 closedSet.Add(currentNode);
@@ -304,10 +315,6 @@ namespace AlphaStar
                 {
                     if (closedSet.Contains(neighbour))
                         continue;
-
-
-                    //if(isSlowMotionActive)
-                    //    Thread.Sleep(time_in_ms);
 
 
                     int currentNodeToNeighbourNode = currentNode.G_cost + GetDistance(currentNode, neighbour);
@@ -361,37 +368,20 @@ namespace AlphaStar
                 path.Add(currentNode);
                 currentNode = currentNode.Parent;
             }
-
+            path.Add(currentNode);
             path.Reverse();
 
             foreach (Node n in path)
             {
-                foreach (Button b in grid_panel.Controls)
-                {
-                    if (b.Tag.Equals(n))
-                    {
-                        if (b.BackColor != Color.Red)
-                        {
-                            b.BackColor = Color.Lime;
+                Button btn = GetButtonByCoords(n.X, n.Y);
 
-                            b.Refresh();
-                            if (isSlowMotionActive)
-                                Thread.Sleep(time_in_ms);
-                        }
+                btn.BackColor = Color.Lime;
 
+                btn.Refresh();
+                if (isSlowMotionActive)
+                    Thread.Sleep(time_in_ms);
 
-                    }
-                }
             }
-
-            //Console.WriteLine($"color counter: {buttonsWithColor.Count}");
-            //foreach (Button b in buttonsWithColor)
-            //{
-            //    Console.WriteLine($"color btn name: {b.Name} {b.BackColor}");
-            //    Console.WriteLine("Brightness: " + b.BackColor.GetBrightness());
-            //    Console.WriteLine("Hue: " + b.BackColor.GetHue());
-            //    Console.WriteLine("Saturation: " + b.BackColor.GetSaturation());
-            //}
 
         }
 
@@ -470,12 +460,13 @@ namespace AlphaStar
                                 btn.Text = btn.Name;
                             buttonsWithColor.Add(btn);
 
+                            btn.Refresh();
                             if (isSlowMotionActive)
                                 Thread.Sleep(time_in_ms);
                         }
 
                         
-                        btn.Refresh();
+                        
                     }                    
                 }
             }
