@@ -307,7 +307,7 @@ namespace AlphaStar
                     RetracePath(startingNode, endingNode);
                     stopwatch.Stop();
                     timerStr = stopwatch.ElapsedMilliseconds.ToString();
-                    timer_label.Text = timerStr;
+                    timer_label.Text = ParseTimeString(timerStr);
                     return;
                 }
 
@@ -331,8 +331,22 @@ namespace AlphaStar
             stopwatch.Stop();
             timerStr = stopwatch.ElapsedMilliseconds.ToString();
             timer_label.Size = Prompt.GetStringSize(timerStr);
-            timer_label.Text = timerStr;
+            timer_label.Text = ParseTimeString(timerStr);
             MessageBox.Show("Path not found");
+        }
+
+        private string ParseTimeString(string timerStr)
+        {
+            if(timerStr.Length <= 3)
+            {
+                return "seconds: " + timerStr;
+            }
+            else if(timerStr.Length > 3)
+            {
+                return "seconds: " + timerStr;
+            }
+
+            return "seconds: " + timerStr;
         }
 
         private void obstacles_button_Click(object sender, EventArgs e)

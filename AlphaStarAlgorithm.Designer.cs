@@ -142,7 +142,7 @@
             // 
             // timer_label
             // 
-            this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timer_label.Location = new System.Drawing.Point(1610, 492);
             this.timer_label.Name = "timer_label";
             this.timer_label.Size = new System.Drawing.Size(60, 43);
