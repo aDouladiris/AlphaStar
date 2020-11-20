@@ -337,16 +337,54 @@ namespace AlphaStar
 
         private string ParseTimeString(string timerStr)
         {
-            if(timerStr.Length <= 3)
+            timerStr = "012345678912";
+            Console.WriteLine("L: " + timerStr.Length);
+
+            if (timerStr.Length <= 3)
             {
+                return "milliseconds: " + timerStr;
+            }
+            else if(timerStr.Length > 3 && timerStr.Length <= 6)
+            {
+
+                string msecs = timerStr.Substring(timerStr.Length - 3, 3);
+                string secs = timerStr.Substring(0, timerStr.Length-3);
+
+                Console.WriteLine("msecs: " + msecs);
+                Console.WriteLine("secs: " + secs);
+
                 return "seconds: " + timerStr;
             }
-            else if(timerStr.Length > 3)
+            else if (timerStr.Length > 6 && timerStr.Length <= 9)
             {
+
+                string msecs = timerStr.Substring(timerStr.Length - 3, 3);
+                string secs = timerStr.Substring(timerStr.Length - 6, 3);
+                string mins = timerStr.Substring(0, timerStr.Length - 6);
+
+                Console.WriteLine("msecs: " + msecs);
+                Console.WriteLine("secs: " + secs);
+                Console.WriteLine("mins: " + mins);
+
+                return "seconds: " + timerStr;
+            }
+            else if (timerStr.Length > 9 && timerStr.Length <= 12)
+            {
+
+                string msecs = timerStr.Substring(timerStr.Length - 3, 3);
+                string secs = timerStr.Substring(timerStr.Length - 6, 3);
+                string mins = timerStr.Substring(timerStr.Length - 9, 3);
+                string hours = timerStr.Substring(0, timerStr.Length - 9);
+
+                Console.WriteLine("msecs: " + msecs);
+                Console.WriteLine("secs: " + secs);
+                Console.WriteLine("mins: " + mins);
+                Console.WriteLine("hours: " + hours);
+
                 return "seconds: " + timerStr;
             }
 
-            return "seconds: " + timerStr;
+            return "";
         }
 
         private void obstacles_button_Click(object sender, EventArgs e)
