@@ -54,7 +54,7 @@
     </Compile>
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Prompt.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AlphaStarAlgorithm.resx">
       <DependentUpon>AlphaStarAlgorithm.cs</DependentUpon>

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace AlphaStar
 {
-    static class Prompt
+    static class Helpers
     {
 
 
@@ -38,7 +38,7 @@ namespace AlphaStar
             TextBox slowmotion_Textbox = new TextBox()
             {
                 Size = inputTextboxSize,
-                Location = new Point((prompt.Width / 2) - 2 * (inputTextboxSize.Width / 2) - 5, 10 + promptLabel.Location.Y + promptLabel.Height),
+                Location = new Point((promptLabel.Width / 2) - (inputTextboxSize.Width / 2) , 10 + promptLabel.Location.Y + promptLabel.Height),
                 Text = $"{default_time}",
                 MaxLength = 5,
                 TextAlign = HorizontalAlignment.Center
@@ -54,7 +54,7 @@ namespace AlphaStar
                 Width = confirmButtonSize.Width * 2,
                 Height = confirmButtonSize.Height + 10,
                 Text = confirmButtonText,
-                Location = new Point((prompt.Width / 2) - 3*(confirmButtonSize.Width / 2), slowmotion_Textbox.Location.Y + 2 * slowmotion_Textbox.Height),
+                Location = new Point((promptLabel.Width / 2) - 2*(confirmButtonSize.Width / 2), slowmotion_Textbox.Location.Y + 2 * slowmotion_Textbox.Height),
                 DialogResult = DialogResult.OK
             };
 

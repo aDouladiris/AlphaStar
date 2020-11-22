@@ -22,7 +22,7 @@ namespace AlphaStar
         Button finishButton = null;
         int vertical_tiles_number = 0;
         int horizontal_tiles_number = 0;
-        string[] axis_dimensions = Prompt.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραπλεύρου του χάρτη", "Μέγεθος Τετράπλευρου", 80, 80);
+        string[] axis_dimensions = Helpers.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραπλεύρου του χάρτη", "Μέγεθος Τετράπλευρου", 80, 80);
         bool isSlowMotionActive = false;
         int time_in_ms = 0;
         Size buttonSize;
@@ -41,11 +41,9 @@ namespace AlphaStar
 
             duration_label.Width = duration_label.Width * 2;
             duration_label.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, duration_label.Location.Y);
-            //duration_label.BorderStyle = BorderStyle.FixedSingle;
 
-            //timer_label.Width = 2 * timer_label.Width;
-            timer_label.Location = new Point(Screen.PrimaryScreen.Bounds.Width - 2 * timer_label.Width, timer_label.Location.Y);
-            //timer_label.BorderStyle = BorderStyle.FixedSingle;
+            timer_label.Location = new Point(duration_label.Location.X, timer_label.Location.Y);
+            timer_values_label.Location = new Point(timer_label.Location.X + timer_label.Width, timer_label.Location.Y);
 
 
 
@@ -53,8 +51,8 @@ namespace AlphaStar
 
             foreach (Button b in btns)
             {
-                if (!b.Equals(exit_button))
-                    b.Width = 2 * b.Width;
+                //if (!b.Equals(exit_button))
+                b.Width = 2 * b.Width;
                 b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
             }
         }
@@ -236,12 +234,12 @@ namespace AlphaStar
 
             if (startButton == null)
             {
-                MessageBox.Show("No starting point. Cannot proceed");
+                MessageBox.Show("Δεν έχετε ορίσει σημείο εκκίνησης");
                 return;
             }
             else if (finishButton == null)
             {
-                MessageBox.Show("No ending point. Cannot proceed");
+                MessageBox.Show("Δεν έχετε ορίσει σημείο τερματισμού");
                 return;
             }
 
@@ -274,6 +272,7 @@ namespace AlphaStar
                     if (buttonSize.Width >= 50 && !btn.Text.StartsWith("F: ") )
                     {
                         btn.Text = "F: " + openSet[i].F_cost.ToString() + "\nG: " + openSet[i].G_cost.ToString() + "\nH: " + openSet[i].H_cost;
+                        SetAutoForeColor(btn);
                         btn.Refresh();
                         if (isSlowMotionActive)
                             Thread.Sleep(time_in_ms);
@@ -293,6 +292,7 @@ namespace AlphaStar
                     continue;
 
                 currentNode_btn.BackColor = Color.Gray;
+                SetAutoForeColor(currentNode_btn);
                 currentNode.color = currentNode_btn.BackColor;
 
                 //currentNode_btn.Refresh();
@@ -307,7 +307,7 @@ namespace AlphaStar
                     RetracePath(startingNode, endingNode);
                     stopwatch.Stop();
                     timerStr = stopwatch.ElapsedMilliseconds.ToString();
-                    timer_label.Text = ParseTimeString(timerStr);
+                    ParseTimeString(timerStr);
                     return;
                 }
 
@@ -330,19 +330,23 @@ namespace AlphaStar
 
             stopwatch.Stop();
             timerStr = stopwatch.ElapsedMilliseconds.ToString();
-            timer_label.Size = Prompt.GetStringSize(timerStr);
-            timer_label.Text = ParseTimeString(timerStr);
-            MessageBox.Show("Path not found");
+            ParseTimeString(timerStr);
+            MessageBox.Show("Δε βρέθηκε μονοπάτι");
         }
 
-        private string ParseTimeString(string timerStr)
-        {
-            timerStr = "012345678912";
+        private void ParseTimeString(string timerStr)
+        {            
+            duration_label.Text = "Διάρκεια";
             Console.WriteLine("L: " + timerStr.Length);
+
+            string desc = "";
+            string result = "";
 
             if (timerStr.Length <= 3)
             {
-                return "milliseconds: " + timerStr;
+                desc = "Χιλ. δευτ/ου:";
+                result = timerStr;
+
             }
             else if(timerStr.Length > 3 && timerStr.Length <= 6)
             {
@@ -350,10 +354,13 @@ namespace AlphaStar
                 string msecs = timerStr.Substring(timerStr.Length - 3, 3);
                 string secs = timerStr.Substring(0, timerStr.Length-3);
 
+                desc = "Δευτερόλεπτα:\nΧιλ. δευτ/ου:";
+                result = $"{secs}\n{msecs}";
+
                 Console.WriteLine("msecs: " + msecs);
                 Console.WriteLine("secs: " + secs);
 
-                return "seconds: " + timerStr;
+
             }
             else if (timerStr.Length > 6 && timerStr.Length <= 9)
             {
@@ -362,11 +369,10 @@ namespace AlphaStar
                 string secs = timerStr.Substring(timerStr.Length - 6, 3);
                 string mins = timerStr.Substring(0, timerStr.Length - 6);
 
-                Console.WriteLine("msecs: " + msecs);
-                Console.WriteLine("secs: " + secs);
-                Console.WriteLine("mins: " + mins);
+                desc = "Λεπτά:\nΔευτερόλεπτα:\nΧιλ. δευτ/ου:";
+                result = $"{mins}\n{secs}\nm{msecs}";
 
-                return "seconds: " + timerStr;
+
             }
             else if (timerStr.Length > 9 && timerStr.Length <= 12)
             {
@@ -381,10 +387,24 @@ namespace AlphaStar
                 Console.WriteLine("mins: " + mins);
                 Console.WriteLine("hours: " + hours);
 
-                return "seconds: " + timerStr;
+                desc = "Ώρες:\nΛεπτά:\nΔευτερόλεπτα:\nΧιλ. δευτ/ου:";
+                result = $"{hours}\n{mins}\n{secs}\n{msecs}";
+
+
             }
 
-            return "";
+            timer_label.Size = Helpers.GetStringSize(desc);
+            timer_label.Text = desc;
+
+            //timer_values_label.Size = Prompt.GetStringSize(result);
+            timer_values_label.Location = new Point(timer_label.Location.X + timer_label.Width, timer_label.Location.Y);
+            timer_values_label.Text = result;
+
+            timer_label.Height = timer_values_label.Height;
+            Console.WriteLine("f1: " + timer_label.Font);
+            Console.WriteLine("f2: " + timer_values_label.Font);
+            Console.WriteLine("h1: " + timer_label.Height);
+            Console.WriteLine("h2: " + timer_values_label.Height);
         }
 
         private void obstacles_button_Click(object sender, EventArgs e)
@@ -399,7 +419,7 @@ namespace AlphaStar
                 {
                     b.BackColor = Color.Black;
                     Node n = (Node)b.Tag;
-                    n.color = b.BackColor;
+                    n.color = b.BackColor;                    
 
                     if (!buttonsWithObstacles.Contains(b))
                         buttonsWithObstacles.Add(b);
@@ -512,6 +532,7 @@ namespace AlphaStar
                                 btn.Text = btn.Name;
                             buttonsWithColor.Add(btn);
 
+                            SetAutoForeColor(btn);
                             btn.Refresh();
                             if (isSlowMotionActive)
                                 Thread.Sleep(time_in_ms);
@@ -542,7 +563,9 @@ namespace AlphaStar
             startButton = null;
             finishButton = null;
             Node n;
+            duration_label.Text = "";
             timer_label.Text = "";
+            timer_values_label.Text = "";
 
             foreach (Button b in buttonsWithColor)
             {
@@ -565,7 +588,9 @@ namespace AlphaStar
             startButton = null;
             finishButton = null;
             Node n;
+            duration_label.Text = "";
             timer_label.Text = "";
+            timer_values_label.Text = "";
 
             foreach (Button b in buttonsWithObstacles)
             {
@@ -573,6 +598,7 @@ namespace AlphaStar
                 n.color = Color.White;
                 b.BackColor = n.color;
 
+                b.Text = "";
                 b.FlatAppearance.BorderSize = 1;
                 b.FlatAppearance.BorderColor = Color.Black;
                 b.Refresh();
@@ -605,19 +631,12 @@ namespace AlphaStar
 
                         string[] buffer = b.Name.Split('_');
 
-                        b.Text = $"I : {grid_panel.Controls.IndexOf(b)}\nX: {buffer[0]}\nY: {buffer[1]}";
-                        b.TextAlign = ContentAlignment.MiddleCenter;
+                        b.Text = $"I: {grid_panel.Controls.IndexOf(b)}\nX: {buffer[0]}\nY: {buffer[1]}";
+                        b.TextAlign = ContentAlignment.MiddleLeft;
                         b.FlatAppearance.BorderSize = 1;
                         b.FlatAppearance.BorderColor = Color.Black;
 
-                        if (b.BackColor.GetBrightness() >= 0.5)
-                        {
-                            b.ForeColor = Color.Black;
-                        }
-                        else
-                        {
-                            b.ForeColor = Color.White;
-                        }
+                        SetAutoForeColor(b);
                     }
                     else
                     {
@@ -626,6 +645,20 @@ namespace AlphaStar
                 }
             }
 
+        }
+
+        private void SetAutoForeColor(Button b)
+        {
+            if (b.BackColor.GetBrightness() >= 0.5 && b.BackColor != Color.Blue)
+            {
+                b.ForeColor = Color.Black;
+            }
+            else
+            {
+                b.ForeColor = Color.White;
+            }
+
+            b.FlatAppearance.BorderColor = Color.Black;
         }
 
         private void resize_button_Click(object sender, EventArgs e)
@@ -637,7 +670,7 @@ namespace AlphaStar
             this.Refresh();
             grid_panel.Refresh();
 
-            string[] axis_dimensions = Prompt.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραπλεύρου του χάρτη", "Μέγεθος Τετράπλευρου", 80, 80);
+            string[] axis_dimensions = Helpers.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραπλεύρου του χάρτη", "Μέγεθος Τετράπλευρου", 80, 80);
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
         }
@@ -646,9 +679,9 @@ namespace AlphaStar
         {
             if(!isSlowMotionActive)
             {
-                time_in_ms = int.Parse(Prompt.ShowDialogSlowMotion("Διαλέξτε τα milliseconds του slow motion", "Slow Μotion", 500));
+                time_in_ms = int.Parse(Helpers.ShowDialogSlowMotion("Διαλέξτε τα χιλιοστά δευτερολέπτου (ms) της Αργής Κίνησης", "Αργή Κίνηση", 500));
                 isSlowMotionActive = true;
-                slow_motion_button.BackColor = Color.Lime;
+                slow_motion_button.BackColor = Color.Yellow;
                 slow_motion_button.ForeColor = Color.Black;
             }
             else

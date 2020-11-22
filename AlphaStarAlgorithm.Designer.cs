@@ -39,18 +39,19 @@
             this.timer_label = new System.Windows.Forms.Label();
             this.slow_motion_button = new System.Windows.Forms.Button();
             this.duration_label = new System.Windows.Forms.Label();
+            this.timer_values_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // exit_button
             // 
             this.exit_button.BackColor = System.Drawing.Color.OrangeRed;
-            this.exit_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exit_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.exit_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.exit_button.Location = new System.Drawing.Point(1610, 12);
             this.exit_button.Name = "exit_button";
             this.exit_button.Size = new System.Drawing.Size(60, 35);
             this.exit_button.TabIndex = 0;
-            this.exit_button.Text = "Exit";
+            this.exit_button.Text = "Έξοδος";
             this.exit_button.UseVisualStyleBackColor = false;
             this.exit_button.Click += new System.EventHandler(this.exit_button_Click);
             // 
@@ -64,53 +65,53 @@
             // 
             // obstacles_button
             // 
-            this.obstacles_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.obstacles_button.BackColor = System.Drawing.Color.Black;
             this.obstacles_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.obstacles_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.obstacles_button.Location = new System.Drawing.Point(1610, 67);
             this.obstacles_button.Name = "obstacles_button";
-            this.obstacles_button.Size = new System.Drawing.Size(60, 35);
+            this.obstacles_button.Size = new System.Drawing.Size(60, 51);
             this.obstacles_button.TabIndex = 2;
-            this.obstacles_button.Text = "Create Obstacles";
+            this.obstacles_button.Text = "Δημιουργία εμποδίων";
             this.obstacles_button.UseVisualStyleBackColor = false;
             this.obstacles_button.Click += new System.EventHandler(this.obstacles_button_Click);
             // 
             // algo_button
             // 
-            this.algo_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.algo_button.BackColor = System.Drawing.Color.Lime;
             this.algo_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.algo_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.algo_button.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.algo_button.Location = new System.Drawing.Point(1610, 124);
             this.algo_button.Name = "algo_button";
-            this.algo_button.Size = new System.Drawing.Size(60, 35);
+            this.algo_button.Size = new System.Drawing.Size(60, 50);
             this.algo_button.TabIndex = 3;
-            this.algo_button.Text = "Run A*";
+            this.algo_button.Text = "Εκτέλεση αλγορίθμου A*";
             this.algo_button.UseVisualStyleBackColor = false;
             this.algo_button.Click += new System.EventHandler(this.algo_button_Click);
             // 
             // clear_button
             // 
-            this.clear_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.clear_button.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.clear_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.clear_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.clear_button.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.clear_button.Location = new System.Drawing.Point(1610, 180);
             this.clear_button.Name = "clear_button";
-            this.clear_button.Size = new System.Drawing.Size(60, 35);
+            this.clear_button.Size = new System.Drawing.Size(60, 52);
             this.clear_button.TabIndex = 4;
-            this.clear_button.Text = "Clear Path";
+            this.clear_button.Text = "Καθαρισμός μονοπατιού";
             this.clear_button.UseVisualStyleBackColor = false;
             this.clear_button.Click += new System.EventHandler(this.clear_button_Click);
             // 
             // clearAll_button
             // 
-            this.clearAll_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.clearAll_button.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.clearAll_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.clearAll_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.clearAll_button.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.clearAll_button.Location = new System.Drawing.Point(1610, 238);
             this.clearAll_button.Name = "clearAll_button";
-            this.clearAll_button.Size = new System.Drawing.Size(60, 35);
+            this.clearAll_button.Size = new System.Drawing.Size(60, 49);
             this.clearAll_button.TabIndex = 5;
-            this.clearAll_button.Text = "Clear Grid";
+            this.clearAll_button.Text = "Καθαρισμός πλέγματος";
             this.clearAll_button.UseVisualStyleBackColor = false;
             this.clearAll_button.Click += new System.EventHandler(this.clearAll_button_Click);
             // 
@@ -121,9 +122,9 @@
             this.debug_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.debug_button.Location = new System.Drawing.Point(1610, 293);
             this.debug_button.Name = "debug_button";
-            this.debug_button.Size = new System.Drawing.Size(60, 35);
+            this.debug_button.Size = new System.Drawing.Size(60, 47);
             this.debug_button.TabIndex = 6;
-            this.debug_button.Text = "Show Axis";
+            this.debug_button.Text = "Συντεταγμένες τετραπλεύρων";
             this.debug_button.UseVisualStyleBackColor = false;
             this.debug_button.Click += new System.EventHandler(this.debug_button_Click);
             // 
@@ -134,32 +135,31 @@
             this.resize_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.resize_button.Location = new System.Drawing.Point(1610, 346);
             this.resize_button.Name = "resize_button";
-            this.resize_button.Size = new System.Drawing.Size(60, 35);
+            this.resize_button.Size = new System.Drawing.Size(60, 51);
             this.resize_button.TabIndex = 7;
-            this.resize_button.Text = "Resize Grid";
+            this.resize_button.Text = "Αλλαγή μεγέθους πλέγματος";
             this.resize_button.UseVisualStyleBackColor = false;
             this.resize_button.Click += new System.EventHandler(this.resize_button_Click);
             // 
             // timer_label
             // 
-            this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.timer_label.Location = new System.Drawing.Point(1610, 492);
             this.timer_label.Name = "timer_label";
-            this.timer_label.Size = new System.Drawing.Size(60, 43);
+            this.timer_label.Size = new System.Drawing.Size(60, 61);
             this.timer_label.TabIndex = 8;
-            this.timer_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.timer_label.Click += new System.EventHandler(this.timer_label_Click);
             // 
             // slow_motion_button
             // 
-            this.slow_motion_button.BackColor = System.Drawing.Color.SlateGray;
+            this.slow_motion_button.BackColor = System.Drawing.Color.DodgerBlue;
             this.slow_motion_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.slow_motion_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.slow_motion_button.Location = new System.Drawing.Point(1610, 403);
             this.slow_motion_button.Name = "slow_motion_button";
             this.slow_motion_button.Size = new System.Drawing.Size(60, 35);
             this.slow_motion_button.TabIndex = 9;
-            this.slow_motion_button.Text = "Slow Motion";
+            this.slow_motion_button.Text = "Αργή κίνηση";
             this.slow_motion_button.UseVisualStyleBackColor = false;
             this.slow_motion_button.Click += new System.EventHandler(this.slow_motion_button_Click);
             // 
@@ -170,8 +170,15 @@
             this.duration_label.Name = "duration_label";
             this.duration_label.Size = new System.Drawing.Size(60, 24);
             this.duration_label.TabIndex = 12;
-            this.duration_label.Text = "Διάρκεια";
             this.duration_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // timer_values_label
+            // 
+            this.timer_values_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.timer_values_label.Location = new System.Drawing.Point(1544, 492);
+            this.timer_values_label.Name = "timer_values_label";
+            this.timer_values_label.Size = new System.Drawing.Size(60, 61);
+            this.timer_values_label.TabIndex = 13;
             // 
             // AlphaStarAlgorithm
             // 
@@ -179,6 +186,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1682, 675);
+            this.Controls.Add(this.timer_values_label);
             this.Controls.Add(this.duration_label);
             this.Controls.Add(this.slow_motion_button);
             this.Controls.Add(this.timer_label);
@@ -209,6 +217,7 @@
         private System.Windows.Forms.Label timer_label;
         private System.Windows.Forms.Button slow_motion_button;
         private System.Windows.Forms.Label duration_label;
+        private System.Windows.Forms.Label timer_values_label;
     }
 }
 
