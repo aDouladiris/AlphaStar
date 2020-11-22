@@ -51,9 +51,17 @@ namespace AlphaStar
 
             foreach (Button b in btns)
             {
-                //if (!b.Equals(exit_button))
-                b.Width = 2 * b.Width;
-                b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
+                if (b.Equals(exit_button))
+                {
+                    b.Width += 5;
+                    b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 30, grid_panel.Location.Y);
+                }
+                else
+                {
+                    b.Width = 2 * b.Width;
+                    b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
+                }
+
             }
         }
 

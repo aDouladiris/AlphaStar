@@ -47,7 +47,7 @@
             this.exit_button.BackColor = System.Drawing.Color.OrangeRed;
             this.exit_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.exit_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.exit_button.Location = new System.Drawing.Point(1610, 12);
+            this.exit_button.Location = new System.Drawing.Point(1613, 12);
             this.exit_button.Name = "exit_button";
             this.exit_button.Size = new System.Drawing.Size(60, 35);
             this.exit_button.TabIndex = 0;
@@ -117,10 +117,10 @@
             // 
             // debug_button
             // 
-            this.debug_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.debug_button.BackColor = System.Drawing.Color.LightSlateGray;
             this.debug_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.debug_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.debug_button.Location = new System.Drawing.Point(1610, 293);
+            this.debug_button.Location = new System.Drawing.Point(1610, 334);
             this.debug_button.Name = "debug_button";
             this.debug_button.Size = new System.Drawing.Size(60, 47);
             this.debug_button.TabIndex = 6;
@@ -130,10 +130,10 @@
             // 
             // resize_button
             // 
-            this.resize_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.resize_button.BackColor = System.Drawing.Color.OrangeRed;
             this.resize_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.resize_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.resize_button.Location = new System.Drawing.Point(1610, 346);
+            this.resize_button.Location = new System.Drawing.Point(1610, 387);
             this.resize_button.Name = "resize_button";
             this.resize_button.Size = new System.Drawing.Size(60, 51);
             this.resize_button.TabIndex = 7;
@@ -152,10 +152,10 @@
             // 
             // slow_motion_button
             // 
-            this.slow_motion_button.BackColor = System.Drawing.Color.DodgerBlue;
+            this.slow_motion_button.BackColor = System.Drawing.Color.LightSlateGray;
             this.slow_motion_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.slow_motion_button.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.slow_motion_button.Location = new System.Drawing.Point(1610, 403);
+            this.slow_motion_button.Location = new System.Drawing.Point(1610, 293);
             this.slow_motion_button.Name = "slow_motion_button";
             this.slow_motion_button.Size = new System.Drawing.Size(60, 35);
             this.slow_motion_button.TabIndex = 9;
