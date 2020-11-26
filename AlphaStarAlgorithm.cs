@@ -178,111 +178,96 @@ namespace AlphaStar
                 if (buttonsWithColor.Contains(_sender))
                     buttonsWithColor.Remove(_sender);
             }
-            //Blue button
-            else if ((_sender.BackColor == Color.Black && !phaseOne) || (phaseOne && phaseTwo && !phaseThree) )
+            //Blue button null
+            else if ((_sender.BackColor == Color.Black && startButton == null && !phaseOne && !phaseTwo && !phaseThree) || 
+                (phaseOne && phaseTwo && !phaseThree && _sender.BackColor == Color.White && startButton == null)
+                )
             {
+                Console.WriteLine("blue null");
+                _sender.BackColor = Color.Blue;
+                startButton = _sender;
 
-                //_sender.BackColor = Color.Blue;
-                //startButton = _sender;
+                //Assign the new color to the node            
+                _senderNode.color = _sender.BackColor;
 
-                ////Assign the new color to the node            
-                //_senderNode.color = _sender.BackColor;
+                //Add to color list
+                if (!buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Add(_sender);
 
-                ////Add to color list
-                //if (!buttonsWithColor.Contains(_sender))
-                //    buttonsWithColor.Add(_sender);
-
-                ////Remove from other lists
-                //if (buttonsWithObstacles.Contains(_sender))
-                //    buttonsWithObstacles.Remove(_sender);
-
-                if (startButton == null)
-                {
-                    _sender.BackColor = Color.Blue;
-                    startButton = _sender;
-
-                    //Assign the new color to the node            
-                    _senderNode.color = _sender.BackColor;
-
-                    //Add to color list
-                    if (!buttonsWithColor.Contains(_sender))
-                        buttonsWithColor.Add(_sender);
-
-                    //Remove from other lists
-                    if (buttonsWithObstacles.Contains(_sender))
-                        buttonsWithObstacles.Remove(_sender);
-                }
-                else
-                {
-                    startButton.BackColor = Color.White;
-                    //Remove from color list
-                    if (buttonsWithColor.Contains(startButton))
-                        buttonsWithColor.Remove(startButton);
-                    startButton.Refresh();
-
-
-                    _sender.BackColor = Color.Blue;
-                    startButton = _sender;
-
-                    //Assign the new color to the node            
-                    _senderNode.color = _sender.BackColor;
-
-                    //Add to color list
-                    if (!buttonsWithColor.Contains(_sender))
-                        buttonsWithColor.Add(_sender);
-
-                    //Remove from other lists
-                    if (buttonsWithObstacles.Contains(_sender))
-                        buttonsWithObstacles.Remove(_sender);
-                }
+                //Remove from other lists
+                if (buttonsWithObstacles.Contains(_sender))
+                    buttonsWithObstacles.Remove(_sender);
                 
+            }
+            //Blue button !null
+            else if (_sender.BackColor == Color.Black && startButton != null)
+            {
+                Console.WriteLine("blue !null");
+                startButton.BackColor = Color.White;
+                //Remove from color list
+                if (buttonsWithColor.Contains(startButton))
+                    buttonsWithColor.Remove(startButton);
+                startButton.Refresh();
+
+                _sender.BackColor = Color.Blue;
+                startButton = _sender;
+
+                //Assign the new color to the node            
+                _senderNode.color = _sender.BackColor;
+
+                //Add to color list
+                if (!buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Add(_sender);
+
+                //Remove from other lists
+                if (buttonsWithObstacles.Contains(_sender))
+                    buttonsWithObstacles.Remove(_sender);
 
             }
-            //Red button
-            else if ((_sender.BackColor == Color.Black && !phaseOne) || (phaseOne && phaseTwo && phaseThree))
+            //Red button null
+            else if ((_sender.BackColor == Color.Black && finishButton == null && !phaseOne && !phaseTwo && !phaseThree) || 
+                (phaseOne && phaseTwo && phaseThree && _sender.BackColor == Color.White && finishButton == null)
+                )
             {
+                Console.WriteLine("red null");
+                _sender.BackColor = Color.Red;
+                finishButton = _sender;
 
-                    //_sender.BackColor = Color.Red;
-                    //finishButton = _sender;
+                //Assign the new color to the node            
+                _senderNode.color = _sender.BackColor;
 
-                    ////Add to color list
-                    //if (!buttonsWithColor.Contains(_sender))
-                    //    buttonsWithColor.Add(_sender);
+                //Add to color list
+                if (!buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Add(_sender);
 
-                    ////Assign the new color to the node            
-                    //_senderNode.color = _sender.BackColor;
+                //Remove from other lists
+                if (buttonsWithObstacles.Contains(_sender))
+                    buttonsWithObstacles.Remove(_sender);
 
-                if(finishButton == null)
-                {
-                    _sender.BackColor = Color.Red;
-                    finishButton = _sender;
+            }
+            //Red button !null
+            else if (_sender.BackColor == Color.Black && finishButton != null)
+            {
+                Console.WriteLine("red !null");
+                finishButton.BackColor = Color.White;
+                //Remove from color list
+                if (buttonsWithColor.Contains(finishButton))
+                    buttonsWithColor.Remove(finishButton);
+                finishButton.Refresh();
 
-                    //Add to color list
-                    if (!buttonsWithColor.Contains(_sender))
-                        buttonsWithColor.Add(_sender);
+                _sender.BackColor = Color.Red;
+                finishButton = _sender;
 
-                    //Assign the new color to the node            
-                    _senderNode.color = _sender.BackColor;
-                }
-                else
-                {
-                    finishButton.BackColor = Color.White;
-                    //Remove from color list
-                    if (buttonsWithColor.Contains(finishButton))
-                        buttonsWithColor.Remove(finishButton);
-                    finishButton.Refresh();
+                //Assign the new color to the node            
+                _senderNode.color = _sender.BackColor;
 
-                    _sender.BackColor = Color.Red;
-                    finishButton = _sender;
+                //Add to color list
+                if (!buttonsWithColor.Contains(_sender))
+                    buttonsWithColor.Add(_sender);
 
-                    //Add to color list
-                    if (!buttonsWithColor.Contains(_sender))
-                        buttonsWithColor.Add(_sender);
-
-                    //Assign the new color to the node            
-                    _senderNode.color = _sender.BackColor;
-                }
-                
+                //Remove from other lists
+                if (buttonsWithObstacles.Contains(_sender))
+                    buttonsWithObstacles.Remove(_sender);
 
             }
             else if (_sender.BackColor != Color.Blue && _sender.BackColor != Color.Red)
