@@ -29,6 +29,8 @@ namespace AlphaStar
         int time_in_ms = 0;
         Size buttonSize;
         Label phase_label;
+        Label phaseDescription_label;
+        Button phaseNext_button;
         bool phaseOne = false;
         bool phaseTwo = false;
         bool phaseThree = false;
@@ -38,9 +40,9 @@ namespace AlphaStar
             InitializeComponent();
 
             this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;                 
-                              
+            this.WindowState = FormWindowState.Maximized;
 
+            CheckConditions();
 
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
             TransformGrid();
@@ -200,7 +202,7 @@ namespace AlphaStar
                 
             }
             //Blue button !null
-            else if (_sender.BackColor == Color.Black && startButton != null)
+            else if (_sender.BackColor == Color.White && startButton != null && phaseOne && phaseTwo && !phaseThree)
             {
                 Console.WriteLine("blue !null");
                 startButton.BackColor = Color.White;
@@ -246,8 +248,9 @@ namespace AlphaStar
 
             }
             //Red button !null
-            else if (_sender.BackColor == Color.Black && finishButton != null)
-            {
+            else if (_sender.BackColor == Color.White && finishButton != null && phaseOne && phaseTwo && phaseThree)
+            {             
+
                 Console.WriteLine("red !null");
                 finishButton.BackColor = Color.White;
                 //Remove from color list
@@ -284,7 +287,7 @@ namespace AlphaStar
                     buttonsWithObstacles.Remove(_sender);
             }
 
-
+            CheckConditions();
             _sender.Refresh();
         }
 
@@ -293,8 +296,46 @@ namespace AlphaStar
             Application.Exit();
         }
 
+        private bool CheckConditions()
+        {
+            if ((startButton == null && finishButton != null) ||
+                (startButton != null && finishButton == null)
+                )
+            {
+                return false;
+            }
+
+            if (startButton != null && finishButton != null)
+            {
+                if (phaseNext_button != null)
+                {
+                    phaseNext_button.BackColor = Color.Lime;
+                    phaseNext_button.ForeColor = Color.Black;
+                }
+                    
+                algo_button.BackColor = Color.Lime;
+
+                return true;
+            }
+            else
+            {
+                if(phaseNext_button != null)
+                {
+                    //phaseNext_button.BackColor = Color.Gray;
+                }
+
+                algo_button.BackColor = Color.Yellow;
+                return false;
+            }
+            
+                
+            
+        }
+
         private void algo_button_Click(object sender, EventArgs e)
         {
+
+
             if (startButton == null || finishButton == null)
             {
 
@@ -308,34 +349,40 @@ namespace AlphaStar
                     TextAlign = ContentAlignment.MiddleCenter,
                     Size = algo_button.Size,
                     Location = algo_button.Location,
-                    Font = algo_button.Font,
-                    Text = "Phase 1"
+                    Font = new Font("Microsoft Sans Serif", 10, FontStyle.Bold),
+                    Text = "Στάδιο 1ο",
+                    BorderStyle = BorderStyle.FixedSingle
                 };
 
                 controlPanelPhases.Add(phase_label);
                 this.Controls.Add(phase_label);
 
-                Label phaseDescription_label = new Label()
+                phaseDescription_label = new Label()
                 {
                     TextAlign = ContentAlignment.MiddleCenter,
                     Size = clear_button.Size,
                     Location = clear_button.Location,
                     Font = clear_button.Font,
-                    Text = "Dwste maura koutia"
+                    Text = "Δημιουργία εμποδίων",
+                    BorderStyle = BorderStyle.FixedSingle
                 };
 
                 controlPanelPhases.Add(phaseDescription_label);
                 this.Controls.Add(phaseDescription_label);
 
-                Button phaseNext_button = new Button()
+                phaseNext_button = new Button()
                 {
                     TextAlign = ContentAlignment.MiddleCenter,
-                    Size = exit_button.Size,
-                    Location = new Point(exit_button.Location.X, clearAll_button.Location.Y),
+                    Size = new Size(100, 45),
+                    Location = new Point(exit_button.Location.X-15, clearAll_button.Location.Y),
                     Font = clearAll_button.Font,
-                    Text = "Epomeno"
+                    Text = "Επόμενο",
+                    BackColor = Color.DodgerBlue,
+                    ForeColor = Color.White
                 };
                 phaseNext_button.Click += PhaseNext_button_Click;
+                //phaseNext_button.Height -= 5;
+                //phaseNext_button.Width += 5;
 
                 controlPanelPhases.Add(phaseNext_button);
                 this.Controls.Add(phaseNext_button);
@@ -344,8 +391,9 @@ namespace AlphaStar
 
             }
             else
-            {
-                RunAlphastar();
+            {                
+                if (CheckConditions())
+                    RunAlphastar();
             }
 
 
@@ -355,41 +403,49 @@ namespace AlphaStar
         {
             if (phaseOne && !phaseTwo && !phaseThree)
             {
-                phase_label.Text = "Phase 2";
+                phase_label.Text = "Στάδιο 2ο";
+                phaseDescription_label.Text = "Ορίστε το σημείο εκκίνησης";
                 phaseTwo = true;
             }
             else if (phaseOne && phaseTwo && !phaseThree)
             {
-                phase_label.Text = "Phase 3";
+                if (startButton == null)
+                {
+                    MessageBox.Show("Δεν έχετε ορίσει σημείο εκκίνησης");
+                    return;
+                }
+
+                phase_label.Text = "Στάδιο 3ο";
+                phaseDescription_label.Text = "Ορίστε το σημείο τερματισμού";
+                phaseNext_button.Text = "Εκτέλεση αλγορίθμου";
                 phaseThree = true;
             }
             else if(phaseOne && phaseTwo && phaseThree)
             {
+                if (finishButton == null)
+                {
+                    MessageBox.Show("Δεν έχετε ορίσει σημείο τερματισμού");
+                    return;
+                }
+
                 phaseOne = false;
                 phaseTwo = false;
                 phaseThree = false;
 
                 foreach (Control c in controlPanelPhases)
-                    c.Visible = false;
+                    c.Dispose();
 
                 foreach (Control c in controlPanel)
                     c.Visible = true;                
             }
+
+            if (CheckConditions())
+                RunAlphastar();
                 
         }
 
         private void RunAlphastar()
         {
-            if (startButton == null)
-            {
-                MessageBox.Show("Δεν έχετε ορίσει σημείο εκκίνησης");
-                return;
-            }
-            else if (finishButton == null)
-            {
-                MessageBox.Show("Δεν έχετε ορίσει σημείο τερματισμού");
-                return;
-            }
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
