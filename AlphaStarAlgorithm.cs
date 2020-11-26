@@ -18,6 +18,8 @@ namespace AlphaStar
         List<Button> buttonsWithColor = new List<Button>();
         List<Button> buttonsWithObstacles = new List<Button>();
         List<Control> gridControlList = new List<Control>();
+        List<Control> controlPanel = new List<Control>();
+        List<Control> controlPanelPhases = new List<Control>();
         Button startButton = null;
         Button finishButton = null;
         int vertical_tiles_number = 0;
@@ -26,14 +28,17 @@ namespace AlphaStar
         bool isSlowMotionActive = false;
         int time_in_ms = 0;
         Size buttonSize;
+        bool phaseOne = false;
+        bool phaseTwo = false;
+        bool phaseThree = false;
 
         public AlphaStarAlgorithm()
         {
             InitializeComponent();
 
             this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;          
-                  
+            this.WindowState = FormWindowState.Maximized;                 
+                              
 
 
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
@@ -41,10 +46,12 @@ namespace AlphaStar
 
             duration_label.Width = duration_label.Width * 2;
             duration_label.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, duration_label.Location.Y);
+            controlPanel.Add(duration_label);
 
             timer_label.Location = new Point(duration_label.Location.X, timer_label.Location.Y);
+            controlPanel.Add(timer_label);
             timer_values_label.Location = new Point(timer_label.Location.X + timer_label.Width, timer_label.Location.Y);
-
+            controlPanel.Add(timer_values_label);
 
 
             List<Button> btns = new List<Button> { exit_button, obstacles_button, algo_button, clear_button, clearAll_button, debug_button, resize_button, slow_motion_button };
@@ -60,6 +67,7 @@ namespace AlphaStar
                 {
                     b.Width = 2 * b.Width;
                     b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
+                    controlPanel.Add(b);
                 }
 
             }
@@ -170,43 +178,40 @@ namespace AlphaStar
                     buttonsWithColor.Remove(_sender);
             }
             //Blue button
-            else if (_sender.BackColor == Color.Black && startButton == null)
+            else if (_sender.BackColor == Color.Black && startButton == null && !phaseOne)
             {
 
-                Console.WriteLine("Blue in");
-                _sender.BackColor = Color.Blue;
-                startButton = _sender;
-                //n_start = (Node)_sender.Tag;
-                //n_start.color = _sender.BackColor;
+                    _sender.BackColor = Color.Blue;
+                    startButton = _sender;
 
+                    //Assign the new color to the node            
+                    _senderNode.color = _sender.BackColor;
 
-                //Assign the new color to the node            
-                _senderNode.color = _sender.BackColor;
+                    //Add to color list
+                    if (!buttonsWithColor.Contains(_sender))
+                        buttonsWithColor.Add(_sender);
 
-                //Add to color list
-                if (!buttonsWithColor.Contains(_sender))
-                    buttonsWithColor.Add(_sender);
+                    //Remove from other lists
+                    if (buttonsWithObstacles.Contains(_sender))
+                        buttonsWithObstacles.Remove(_sender);
+                
 
-                //Remove from other lists
-                if (buttonsWithObstacles.Contains(_sender))
-                    buttonsWithObstacles.Remove(_sender);
             }
             //Red button
-            else if (_sender.BackColor == Color.Black && finishButton == null)
+            else if (_sender.BackColor == Color.Black && finishButton == null && !phaseOne)
             {
 
-                Console.WriteLine("Red in");
-                _sender.BackColor = Color.Red;
-                finishButton = _sender;
-                //n_start = (Node)_sender.Tag;
-                //n_start.color = _sender.BackColor;
+                    _sender.BackColor = Color.Red;
+                    finishButton = _sender;
 
-                //Add to color list
-                if (!buttonsWithColor.Contains(_sender))
-                    buttonsWithColor.Add(_sender);
+                    //Add to color list
+                    if (!buttonsWithColor.Contains(_sender))
+                        buttonsWithColor.Add(_sender);
 
-                //Assign the new color to the node            
-                _senderNode.color = _sender.BackColor;
+                    //Assign the new color to the node            
+                    _senderNode.color = _sender.BackColor;
+                
+
             }
             else if (_sender.BackColor != Color.Blue && _sender.BackColor != Color.Red)
             {
@@ -224,12 +229,6 @@ namespace AlphaStar
 
 
             _sender.Refresh();
-
-            if (startButton != null)
-                Console.WriteLine($"s button: {startButton.Name} {startButton.BackColor}");
-
-            if (finishButton != null)
-                Console.WriteLine($"e button: {finishButton.Name} {finishButton.BackColor}");
         }
 
         private void exit_button_Click(object sender, EventArgs e)
@@ -239,7 +238,67 @@ namespace AlphaStar
 
         private void algo_button_Click(object sender, EventArgs e)
         {
+            if (startButton == null || finishButton == null)
+            {
 
+                foreach(Control c in controlPanel)
+                {
+                    c.Visible = false;
+                }
+
+                Label phase_label = new Label()
+                {
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Size = algo_button.Size,
+                    Location = algo_button.Location,
+                    Font = algo_button.Font,
+                    Text = "Phase 1"
+                };
+
+                controlPanelPhases.Add(phase_label);
+                this.Controls.Add(phase_label);
+
+                Label phaseDescription_label = new Label()
+                {
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Size = clear_button.Size,
+                    Location = clear_button.Location,
+                    Font = clear_button.Font,
+                    Text = "Dwste maura koutia"
+                };
+
+                controlPanelPhases.Add(phaseDescription_label);
+                this.Controls.Add(phaseDescription_label);
+
+                Button phaseNext_button = new Button()
+                {
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Size = exit_button.Size,
+                    Location = new Point(exit_button.Location.X, clearAll_button.Location.Y),
+                    Font = clearAll_button.Font,
+                    Text = "Epomeno"
+                };
+
+                controlPanelPhases.Add(phaseNext_button);
+                this.Controls.Add(phaseNext_button);
+
+                phaseOne = true;
+
+            }
+            else
+            {
+                RunAlphastar();
+            }
+
+
+            
+
+
+
+        }
+
+        private void RunAlphastar()
+        {
             if (startButton == null)
             {
                 MessageBox.Show("Δεν έχετε ορίσει σημείο εκκίνησης");
@@ -270,14 +329,14 @@ namespace AlphaStar
             while (openSet.Count > 0)
             {
                 Node currentNode = openSet[0];
-                for(int i=0; i<openSet.Count; i++)
+                for (int i = 0; i < openSet.Count; i++)
                 {
                     openSet[i].GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
                     currentNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
 
                     Button btn = GetButtonByCoords(openSet[i].X, openSet[i].Y);
 
-                    if (buttonSize.Width >= 50 && !btn.Text.StartsWith("F: ") )
+                    if (buttonSize.Width >= 50 && !btn.Text.StartsWith("F: "))
                     {
                         btn.Text = "F: " + openSet[i].F_cost.ToString() + "\nG: " + openSet[i].G_cost.ToString() + "\nH: " + openSet[i].H_cost;
                         SetAutoForeColor(btn);
@@ -285,9 +344,9 @@ namespace AlphaStar
                         if (isSlowMotionActive)
                             Thread.Sleep(time_in_ms);
                     }
-                        
 
-                    if (openSet[i].F_cost < currentNode.F_cost)                    
+
+                    if (openSet[i].F_cost < currentNode.F_cost)
                         currentNode = openSet[i];
                     else if (openSet[i].F_cost == currentNode.F_cost && openSet[i].H_cost < currentNode.H_cost)
                         currentNode = openSet[i];
@@ -327,10 +386,10 @@ namespace AlphaStar
 
                     int currentNodeToNeighbourNode = currentNode.G_cost + GetDistance(currentNode, neighbour);
 
-                    if(currentNodeToNeighbourNode < neighbour.G_cost || !openSet.Contains(neighbour) )
+                    if (currentNodeToNeighbourNode < neighbour.G_cost || !openSet.Contains(neighbour))
                     {
                         neighbour.Parent = currentNode;
-                        openSet.Add(neighbour);                     
+                        openSet.Add(neighbour);
                     }
                 }
             }
@@ -705,5 +764,7 @@ namespace AlphaStar
         {
 
         }
+
+
     }
 }

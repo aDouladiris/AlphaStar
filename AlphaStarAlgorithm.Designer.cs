@@ -143,8 +143,9 @@
             // 
             // timer_label
             // 
+            this.timer_label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.timer_label.Location = new System.Drawing.Point(1610, 492);
+            this.timer_label.Location = new System.Drawing.Point(1610, 483);
             this.timer_label.Name = "timer_label";
             this.timer_label.Size = new System.Drawing.Size(60, 61);
             this.timer_label.TabIndex = 8;
@@ -165,8 +166,9 @@
             // 
             // duration_label
             // 
+            this.duration_label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.duration_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.duration_label.Location = new System.Drawing.Point(1610, 459);
+            this.duration_label.Location = new System.Drawing.Point(1610, 450);
             this.duration_label.Name = "duration_label";
             this.duration_label.Size = new System.Drawing.Size(60, 24);
             this.duration_label.TabIndex = 12;
@@ -174,8 +176,9 @@
             // 
             // timer_values_label
             // 
+            this.timer_values_label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.timer_values_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.timer_values_label.Location = new System.Drawing.Point(1544, 492);
+            this.timer_values_label.Location = new System.Drawing.Point(1544, 483);
             this.timer_values_label.Name = "timer_values_label";
             this.timer_values_label.Size = new System.Drawing.Size(60, 61);
             this.timer_values_label.TabIndex = 13;
