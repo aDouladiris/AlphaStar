@@ -28,6 +28,7 @@ namespace AlphaStar
         bool isSlowMotionActive = false;
         int time_in_ms = 0;
         Size buttonSize;
+        Label phase_label;
         bool phaseOne = false;
         bool phaseTwo = false;
         bool phaseThree = false;
@@ -163,7 +164,7 @@ namespace AlphaStar
             Node _senderNode = (Node)_sender.Tag;
 
             //Black buttons
-            if (_sender.BackColor == Color.White)
+            if (_sender.BackColor == Color.White && !phaseTwo && !phaseThree)
             {
                 _sender.BackColor = Color.Black;
                 //Assign the new color to the node            
@@ -178,8 +179,47 @@ namespace AlphaStar
                     buttonsWithColor.Remove(_sender);
             }
             //Blue button
-            else if (_sender.BackColor == Color.Black && startButton == null && !phaseOne)
+            else if ((_sender.BackColor == Color.Black && !phaseOne) || (phaseOne && phaseTwo && !phaseThree) )
             {
+
+                //_sender.BackColor = Color.Blue;
+                //startButton = _sender;
+
+                ////Assign the new color to the node            
+                //_senderNode.color = _sender.BackColor;
+
+                ////Add to color list
+                //if (!buttonsWithColor.Contains(_sender))
+                //    buttonsWithColor.Add(_sender);
+
+                ////Remove from other lists
+                //if (buttonsWithObstacles.Contains(_sender))
+                //    buttonsWithObstacles.Remove(_sender);
+
+                if (startButton == null)
+                {
+                    _sender.BackColor = Color.Blue;
+                    startButton = _sender;
+
+                    //Assign the new color to the node            
+                    _senderNode.color = _sender.BackColor;
+
+                    //Add to color list
+                    if (!buttonsWithColor.Contains(_sender))
+                        buttonsWithColor.Add(_sender);
+
+                    //Remove from other lists
+                    if (buttonsWithObstacles.Contains(_sender))
+                        buttonsWithObstacles.Remove(_sender);
+                }
+                else
+                {
+                    startButton.BackColor = Color.White;
+                    //Remove from color list
+                    if (buttonsWithColor.Contains(startButton))
+                        buttonsWithColor.Remove(startButton);
+                    startButton.Refresh();
+
 
                     _sender.BackColor = Color.Blue;
                     startButton = _sender;
@@ -194,12 +234,43 @@ namespace AlphaStar
                     //Remove from other lists
                     if (buttonsWithObstacles.Contains(_sender))
                         buttonsWithObstacles.Remove(_sender);
+                }
                 
 
             }
             //Red button
-            else if (_sender.BackColor == Color.Black && finishButton == null && !phaseOne)
+            else if ((_sender.BackColor == Color.Black && !phaseOne) || (phaseOne && phaseTwo && phaseThree))
             {
+
+                    //_sender.BackColor = Color.Red;
+                    //finishButton = _sender;
+
+                    ////Add to color list
+                    //if (!buttonsWithColor.Contains(_sender))
+                    //    buttonsWithColor.Add(_sender);
+
+                    ////Assign the new color to the node            
+                    //_senderNode.color = _sender.BackColor;
+
+                if(finishButton == null)
+                {
+                    _sender.BackColor = Color.Red;
+                    finishButton = _sender;
+
+                    //Add to color list
+                    if (!buttonsWithColor.Contains(_sender))
+                        buttonsWithColor.Add(_sender);
+
+                    //Assign the new color to the node            
+                    _senderNode.color = _sender.BackColor;
+                }
+                else
+                {
+                    finishButton.BackColor = Color.White;
+                    //Remove from color list
+                    if (buttonsWithColor.Contains(finishButton))
+                        buttonsWithColor.Remove(finishButton);
+                    finishButton.Refresh();
 
                     _sender.BackColor = Color.Red;
                     finishButton = _sender;
@@ -210,6 +281,7 @@ namespace AlphaStar
 
                     //Assign the new color to the node            
                     _senderNode.color = _sender.BackColor;
+                }
                 
 
             }
@@ -246,7 +318,7 @@ namespace AlphaStar
                     c.Visible = false;
                 }
 
-                Label phase_label = new Label()
+                phase_label = new Label()
                 {
                     TextAlign = ContentAlignment.MiddleCenter,
                     Size = algo_button.Size,
@@ -278,6 +350,7 @@ namespace AlphaStar
                     Font = clearAll_button.Font,
                     Text = "Epomeno"
                 };
+                phaseNext_button.Click += PhaseNext_button_Click;
 
                 controlPanelPhases.Add(phaseNext_button);
                 this.Controls.Add(phaseNext_button);
@@ -291,10 +364,33 @@ namespace AlphaStar
             }
 
 
-            
+        }
 
+        private void PhaseNext_button_Click(object sender, EventArgs e)
+        {
+            if (phaseOne && !phaseTwo && !phaseThree)
+            {
+                phase_label.Text = "Phase 2";
+                phaseTwo = true;
+            }
+            else if (phaseOne && phaseTwo && !phaseThree)
+            {
+                phase_label.Text = "Phase 3";
+                phaseThree = true;
+            }
+            else if(phaseOne && phaseTwo && phaseThree)
+            {
+                phaseOne = false;
+                phaseTwo = false;
+                phaseThree = false;
 
+                foreach (Control c in controlPanelPhases)
+                    c.Visible = false;
 
+                foreach (Control c in controlPanel)
+                    c.Visible = true;                
+            }
+                
         }
 
         private void RunAlphastar()
