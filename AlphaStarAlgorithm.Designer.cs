@@ -78,9 +78,9 @@
             // 
             // algo_button
             // 
-            this.algo_button.BackColor = System.Drawing.Color.Lime;
+            this.algo_button.BackColor = System.Drawing.Color.DodgerBlue;
             this.algo_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.algo_button.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.algo_button.ForeColor = System.Drawing.Color.White;
             this.algo_button.Location = new System.Drawing.Point(1610, 124);
             this.algo_button.Name = "algo_button";
             this.algo_button.Size = new System.Drawing.Size(60, 50);
@@ -143,7 +143,6 @@
             // 
             // timer_label
             // 
-            this.timer_label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.timer_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.timer_label.Location = new System.Drawing.Point(1610, 483);
             this.timer_label.Name = "timer_label";
@@ -166,7 +165,6 @@
             // 
             // duration_label
             // 
-            this.duration_label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.duration_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.duration_label.Location = new System.Drawing.Point(1610, 450);
             this.duration_label.Name = "duration_label";
@@ -176,7 +174,6 @@
             // 
             // timer_values_label
             // 
-            this.timer_values_label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.timer_values_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.timer_values_label.Location = new System.Drawing.Point(1544, 483);
             this.timer_values_label.Name = "timer_values_label";

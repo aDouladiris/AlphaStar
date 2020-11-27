@@ -206,6 +206,10 @@ namespace AlphaStar
             {
                 Console.WriteLine("blue !null");
                 startButton.BackColor = Color.White;
+                //Assign the previous color to the node            
+                Node previousNode = (Node)startButton.Tag;
+                previousNode.color = startButton.BackColor;
+
                 //Remove from color list
                 if (buttonsWithColor.Contains(startButton))
                     buttonsWithColor.Remove(startButton);
@@ -253,6 +257,10 @@ namespace AlphaStar
 
                 Console.WriteLine("red !null");
                 finishButton.BackColor = Color.White;
+                //Assign the previous color to the node            
+                Node previousNode = (Node)finishButton.Tag;
+                previousNode.color = finishButton.BackColor;
+
                 //Remove from color list
                 if (buttonsWithColor.Contains(finishButton))
                     buttonsWithColor.Remove(finishButton);
@@ -314,6 +322,7 @@ namespace AlphaStar
                 }
                     
                 algo_button.BackColor = Color.Lime;
+                SetAutoForeColor(algo_button);
 
                 return true;
             }
@@ -324,7 +333,10 @@ namespace AlphaStar
                     //phaseNext_button.BackColor = Color.Gray;
                 }
 
-                algo_button.BackColor = Color.Yellow;
+                algo_button.BackColor = Color.DodgerBlue;
+                Console.WriteLine("algob: " + BackColor.GetBrightness() );
+                SetAutoForeColor(algo_button);
+                //algo_button.ForeColor = Color.White;
                 return false;
             }
             
@@ -346,12 +358,13 @@ namespace AlphaStar
 
                 phase_label = new Label()
                 {
-                    TextAlign = ContentAlignment.MiddleCenter,
+                    TextAlign = ContentAlignment.BottomCenter,
                     Size = algo_button.Size,
                     Location = algo_button.Location,
-                    Font = new Font("Microsoft Sans Serif", 10, FontStyle.Bold),
-                    Text = "Στάδιο 1ο",
-                    BorderStyle = BorderStyle.FixedSingle
+                    Font = new Font("Microsoft Sans Serif", 12, FontStyle.Bold),
+                    Text = "Στάδιο Εμποδίων",
+                    ForeColor = Color.OrangeRed,                    
+                    //BorderStyle = BorderStyle.FixedSingle
                 };
 
                 controlPanelPhases.Add(phase_label);
@@ -362,9 +375,9 @@ namespace AlphaStar
                     TextAlign = ContentAlignment.MiddleCenter,
                     Size = clear_button.Size,
                     Location = clear_button.Location,
-                    Font = clear_button.Font,
+                    Font = new Font("Microsoft Sans Serif", 10),
                     Text = "Δημιουργία εμποδίων",
-                    BorderStyle = BorderStyle.FixedSingle
+                    //BorderStyle = BorderStyle.FixedSingle
                 };
 
                 controlPanelPhases.Add(phaseDescription_label);
@@ -403,7 +416,7 @@ namespace AlphaStar
         {
             if (phaseOne && !phaseTwo && !phaseThree)
             {
-                phase_label.Text = "Στάδιο 2ο";
+                phase_label.Text = "Στάδιο Εκκίνησης";
                 phaseDescription_label.Text = "Ορίστε το σημείο εκκίνησης";
                 phaseTwo = true;
             }
@@ -415,7 +428,7 @@ namespace AlphaStar
                     return;
                 }
 
-                phase_label.Text = "Στάδιο 3ο";
+                phase_label.Text = "Στάδιο Τερματισμού";
                 phaseDescription_label.Text = "Ορίστε το σημείο τερματισμού";
                 phaseNext_button.Text = "Εκτέλεση αλγορίθμου";
                 phaseThree = true;
@@ -796,7 +809,7 @@ namespace AlphaStar
             timer_label.Text = "";
             timer_values_label.Text = "";
 
-            foreach (Button b in buttonsWithObstacles)
+            foreach (Button b in grid_panel.Controls)
             {
                 n = (Node)b.Tag;
                 n.color = Color.White;
@@ -807,19 +820,8 @@ namespace AlphaStar
                 b.FlatAppearance.BorderColor = Color.Black;
                 b.Refresh();
             }
+
             buttonsWithObstacles.Clear();
-
-            foreach (Button b in buttonsWithColor)
-            {
-                n = (Node)b.Tag;
-                n.color = Color.White;
-                b.BackColor = n.color;
-
-                b.Text = "";
-                b.FlatAppearance.BorderSize = 1;
-                b.FlatAppearance.BorderColor = Color.Black;
-                b.Refresh();
-            }
             buttonsWithColor.Clear();
         }
 
@@ -853,7 +855,7 @@ namespace AlphaStar
 
         private void SetAutoForeColor(Button b)
         {
-            if (b.BackColor.GetBrightness() >= 0.5 && b.BackColor != Color.Blue)
+            if (b.BackColor.GetBrightness() >= 0.5 && (b.BackColor != Color.Blue || b.BackColor != Color.DodgerBlue))
             {
                 b.ForeColor = Color.Black;
             }
