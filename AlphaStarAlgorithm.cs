@@ -795,9 +795,9 @@ namespace AlphaStar
                 b.FlatAppearance.BorderColor = Color.Black;
                 b.Refresh();                
             }
-
             
             buttonsWithColor.Clear();
+            CheckConditions();
         }
 
         private void clearAll_button_Click(object sender, EventArgs e)
@@ -823,6 +823,7 @@ namespace AlphaStar
 
             buttonsWithObstacles.Clear();
             buttonsWithColor.Clear();
+            CheckConditions();
         }
 
         private void debug_button_Click(object sender, EventArgs e)
@@ -855,10 +856,15 @@ namespace AlphaStar
 
         private void SetAutoForeColor(Button b)
         {
-            if (b.BackColor.GetBrightness() >= 0.5 && (b.BackColor != Color.Blue || b.BackColor != Color.DodgerBlue))
+            if (b.BackColor.GetBrightness() >= 0.5 && b.BackColor == Color.DodgerBlue)
+            {
+                b.ForeColor = Color.White;
+            }
+            else if (b.BackColor.GetBrightness() >= 0.5 && b.BackColor != Color.Blue)
             {
                 b.ForeColor = Color.Black;
             }
+
             else
             {
                 b.ForeColor = Color.White;
