@@ -481,12 +481,9 @@ namespace AlphaStar
                 Node currentNode = openSet[0];
                 for (int i = 0; i < openSet.Count; i++)
                 {
-                    openSet[i].GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
-                    currentNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
-
+                    //print costs
                     Button btn = GetButtonByCoords(openSet[i].X, openSet[i].Y);
-
-                    if (buttonSize.Width >= 50 && !btn.Text.StartsWith("F: "))
+                    if (buttonSize.Width >= 50 && !btn.Text.StartsWith("F: ") && openSet[i].F_cost != 0)
                     {
                         btn.Text = "F: " + openSet[i].F_cost.ToString() + "\nG: " + openSet[i].G_cost.ToString() + "\nH: " + openSet[i].H_cost;
                         SetAutoForeColor(btn);
@@ -494,7 +491,7 @@ namespace AlphaStar
                         if (isSlowMotionActive)
                             Thread.Sleep(time_in_ms);
                     }
-
+                    /////////////////////////////////////////////////////////
 
                     if (openSet[i].F_cost < currentNode.F_cost)
                         currentNode = openSet[i];
@@ -503,8 +500,8 @@ namespace AlphaStar
 
                 }
 
+                //???????
                 Button currentNode_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
-
                 if (currentNode_btn.BackColor == Color.Gray)
                     continue;
 
@@ -512,9 +509,7 @@ namespace AlphaStar
                 SetAutoForeColor(currentNode_btn);
                 currentNode.color = currentNode_btn.BackColor;
 
-                //currentNode_btn.Refresh();
-                //if (isSlowMotionActive)
-                //    Thread.Sleep(time_in_ms);
+
 
                 openSet.Remove(currentNode);
                 closedSet.Add(currentNode);
@@ -530,25 +525,150 @@ namespace AlphaStar
 
                 foreach (Node neighbour in GetNeighbours(currentNode))
                 {
-                    if (closedSet.Contains(neighbour))
+                    
+                    if (closedSet.Contains(neighbour) || neighbour.color == Color.Black)
                         continue;
-
-
+ 
                     int currentNodeToNeighbourNode = currentNode.G_cost + GetDistance(currentNode, neighbour);
 
                     if (currentNodeToNeighbourNode < neighbour.G_cost || !openSet.Contains(neighbour))
                     {
+                        neighbour.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
                         neighbour.Parent = currentNode;
-                        openSet.Add(neighbour);
+                        if(!openSet.Contains(neighbour))
+                            openSet.Add(neighbour);
                     }
                 }
             }
-
 
             stopwatch.Stop();
             timerStr = stopwatch.ElapsedMilliseconds.ToString();
             ParseTimeString(timerStr);
             MessageBox.Show("Δε βρέθηκε μονοπάτι");
+        }
+
+
+
+        private List<Node> GetNeighbours(Node node)
+        {
+            List<Node> neighbours = new List<Node>();
+
+            Console.WriteLine($"Current node: {node.X}, {node.Y} : {node.color} ");
+
+            for (int x = -1; x < 2; x++)
+            {
+                for (int y = -1; y < 2; y++)
+                {
+                    Console.WriteLine($"x: {x}, y: {y}");
+
+                    //Skip middle coords which corresponds to the current node
+                    if (x == 0 && y == 0)
+                        continue;
+
+                    int new_X = node.X + x;
+                    int new_Y = node.Y + y;
+
+                    //If nex coords are crossing the grid bounds, skip them
+                    if (new_X >= horizontal_tiles_number || new_X < 0 || new_Y >= vertical_tiles_number || new_Y < 0)
+                        continue;
+
+                    Node tmp = GetNodeByCoords(new_X, new_Y);
+                    Button btn = GetButtonByCoords(new_X, new_Y);
+                    //Console.WriteLine($"Pre GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
+
+                    if (tmp != null && !neighbours.Contains(tmp) )
+                    {
+                        Console.WriteLine($"GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
+                        neighbours.Add(tmp);
+
+                        if (tmp.color == Color.White)
+                        {
+                            tmp.color = Color.Green;
+                            btn.BackColor = tmp.color;
+                            if (buttonSize.Width >= 50)
+                                btn.Text = btn.Name;
+                            buttonsWithColor.Add(btn);
+
+                            SetAutoForeColor(btn);
+                            btn.Refresh();
+                            if (isSlowMotionActive)
+                                Thread.Sleep(time_in_ms);
+                        }
+
+
+
+                    }
+                }
+            }
+
+            return neighbours;
+        }
+
+        private int GetDistance(Node node_A, Node node_B)
+        {
+            int traveling_cost_X = 1;
+            int traveling_cost_Y = 1;
+
+            int dist_X = traveling_cost_X * Math.Abs(node_A.X - node_B.X);
+            int dist_Y = traveling_cost_Y * Math.Abs(node_A.Y - node_B.Y);
+
+            return dist_X + dist_Y;
+        }
+
+        private void RetracePath(Node startingNode, Node endingNode)
+        {
+            List<Node> path = new List<Node>();
+
+            Node currentNode = endingNode;
+
+            while (currentNode != startingNode)
+            {
+                path.Add(currentNode);
+                currentNode = currentNode.Parent;
+            }
+            path.Add(currentNode);
+            path.Reverse();
+
+            foreach (Node n in path)
+            {
+                Button btn = GetButtonByCoords(n.X, n.Y);
+
+                btn.BackColor = Color.Lime;
+
+                btn.Refresh();
+                if (isSlowMotionActive)
+                    Thread.Sleep(time_in_ms);
+
+            }
+
+        }
+
+        private Node GetNodeByCoords(int X, int Y)
+        {
+            try
+            {
+                int index = (X * vertical_tiles_number) + Y;
+                return (Node)grid_panel.Controls[index].Tag;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        private Button GetButtonByCoords(int X, int Y)
+        {
+            try
+            {
+                int index = (X * vertical_tiles_number) + Y;
+                return (Button)grid_panel.Controls[index];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
 
         private void ParseTimeString(string timerStr)
@@ -646,134 +766,7 @@ namespace AlphaStar
             }
         }
 
-        private void RetracePath(Node startingNode, Node endingNode)
-        {
-            List<Node> path = new List<Node>();
 
-            Node currentNode = endingNode;
-
-            while (currentNode != startingNode)
-            {
-                path.Add(currentNode);
-                currentNode = currentNode.Parent;
-            }
-            path.Add(currentNode);
-            path.Reverse();
-
-            foreach (Node n in path)
-            {
-                Button btn = GetButtonByCoords(n.X, n.Y);
-
-                btn.BackColor = Color.Lime;
-
-                btn.Refresh();
-                if (isSlowMotionActive)
-                    Thread.Sleep(time_in_ms);
-
-            }
-
-        }
-
-
-        private Node GetNodeByCoords(int X, int Y)
-        {
-            try
-            {
-                int index = (X * vertical_tiles_number) + Y;
-                return (Node)grid_panel.Controls[index].Tag;
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }            
-        }
-
-        private Button GetButtonByCoords(int X, int Y)
-        {
-            try
-            {
-                int index = (X * vertical_tiles_number) + Y;
-                return (Button)grid_panel.Controls[index];
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-        }
-
-
-        private List<Node> GetNeighbours(Node node)
-        { 
-            List<Node> neighbours = new List<Node>();
-
-            Console.WriteLine($"Current node: {node.X}, {node.Y} : {node.color} ");
-
-            for (int x = -1; x < 2; x++)
-            {
-                for (int y = -1; y < 2; y++)
-                {
-                    Console.WriteLine($"x: {x}, y: {y}");
-
-                    //Skip middle coords which corresponds to the current node
-                    if (x == 0 && y == 0)
-                        continue;                    
-
-                    int new_X = node.X + x;
-                    int new_Y = node.Y + y;
-
-                    //If nex coords are crossing the grid bounds, skip them
-                    if (new_X >= horizontal_tiles_number || new_X < 0 || new_Y >= vertical_tiles_number || new_Y < 0 )
-                        continue;
-
-                    Node tmp = GetNodeByCoords(new_X, new_Y);
-                    Button btn = GetButtonByCoords(new_X, new_Y);
-                    //Console.WriteLine($"Pre GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
-
-                    if (
-                        tmp != null 
-                        && !neighbours.Contains(tmp) 
-                        && btn.BackColor != Color.Black
-                        )
-                    {
-                        Console.WriteLine($"GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
-                        neighbours.Add(tmp);
-                                                  
-
-                        if(tmp.color == Color.White)
-                        {
-                            tmp.color = Color.Green;
-                            btn.BackColor = tmp.color;
-                            if (buttonSize.Width >= 50)
-                                btn.Text = btn.Name;
-                            buttonsWithColor.Add(btn);
-
-                            SetAutoForeColor(btn);
-                            btn.Refresh();
-                            if (isSlowMotionActive)
-                                Thread.Sleep(time_in_ms);
-                        }
-
-                        
-                        
-                    }                    
-                }
-            }
-
-            return neighbours;
-        }
-
-        private int GetDistance(Node node_A, Node node_B)
-        {
-            int traveling_cost_X = 1;
-            int traveling_cost_Y = 1;
-
-            int dist_X = traveling_cost_X * Math.Abs(node_A.X - node_B.X);
-            int dist_Y = traveling_cost_Y * Math.Abs(node_A.Y - node_B.Y);
-
-            return dist_X + dist_Y;
-        }
 
         private void clear_button_Click(object sender, EventArgs e)
         {
