@@ -479,19 +479,6 @@ namespace AlphaStar
             //3rd
             openSet.Add(startingNode);
 
-            ////////////////////////////////////////////////
-            buffer_btn = GetButtonByCoords(startingNode.X, startingNode.Y);
-            startingNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
-            if (buttonSize.Width >= 50 && !buffer_btn.Text.StartsWith("F: ") && startingNode.F_cost != 0)
-            {
-                buffer_btn.Text = "F: " + startingNode.F_cost.ToString() + "\nG: " + startingNode.G_cost.ToString() + "\nH: " + startingNode.H_cost + "\nD: 0";
-                SetAutoForeColor(buffer_btn);
-                buffer_btn.Refresh();
-                if (isSlowMotionActive)
-                    Thread.Sleep(time_in_ms);
-            }
-            ////////////////////////////////////////////////////
-
             //4th
             while (openSet.Count > 0)
             {
@@ -503,7 +490,6 @@ namespace AlphaStar
                     else if (openSet[i].F_cost == currentNode.F_cost && openSet[i].H_cost < currentNode.H_cost)
                         currentNode = openSet[i];
                 }
-
 
                 /////Paint gray color the validated node that will be removed from OPEN list and be added to the CLOSED list
                 buffer_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
@@ -535,34 +521,34 @@ namespace AlphaStar
                 {
                     buffer_btn = GetButtonByCoords(neighbour.X, neighbour.Y);
 
-                    if (neighbour.color == Color.White)
-                    {
-                        neighbour.color = Color.Green;
-                        buffer_btn.BackColor = neighbour.color;
-                        if (buttonSize.Width >= 50)
-                            buffer_btn.Text = buffer_btn.Name;
-                        buttonsWithColor.Add(buffer_btn);
-
-                        SetAutoForeColor(buffer_btn);
-                        buffer_btn.Refresh();
-                    }
-
 
                     if (closedSet.Contains(neighbour) || neighbour.color == Color.Black)                    
                         continue;
-                                       
-                    int pathFromCurrentNodeToNeighbour = currentNode.G_cost + GetDistance(currentNode, neighbour);
 
-                    if (pathFromCurrentNodeToNeighbour < neighbour.G_cost || !openSet.Contains(neighbour))
+                    /////////////////////////////////////////////////////////
+                    //print traversable neighbours   
+                    neighbour.color = Color.Green;
+                    buffer_btn.BackColor = neighbour.color;
+                    //if (buttonSize.Width >= 50)
+                    //    buffer_btn.Text = buffer_btn.Name;
+                    buttonsWithColor.Add(buffer_btn);
+
+                    SetAutoForeColor(buffer_btn);
+                    buffer_btn.Refresh();
+                    /////////////////////////////////////////////////////////
+
+                    int costFromCurrentNodeToNeighbourNode = currentNode.G_cost + GetDistance(currentNode, neighbour);
+
+                    if (costFromCurrentNodeToNeighbourNode < neighbour.G_cost || !openSet.Contains(neighbour))
                     {
-                        neighbour.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
+                        neighbour.G_cost = costFromCurrentNodeToNeighbourNode;
+                        neighbour.H_cost = GetDistance(neighbour, endingNode);
                         neighbour.Parent = currentNode;
                         /////////////////////////////////////////////////////////
-                        //print costs
-                        
-                        if (buttonSize.Width >= 50 && !buffer_btn.Text.StartsWith("F: ") && neighbour.F_cost != 0)
+                        //print costs                        
+                        if (buttonSize.Width >= 50 )
                         {
-                            buffer_btn.Text = "F: " + neighbour.F_cost.ToString() + "\nG: " + neighbour.G_cost.ToString() + "\nH: " + neighbour.H_cost + "\nD: " + pathFromCurrentNodeToNeighbour;
+                            buffer_btn.Text = "F: " + neighbour.F_cost.ToString() + "\nG: " + neighbour.G_cost.ToString() + "\nH: " + neighbour.H_cost + "\nD: " + GetDistance(currentNode, neighbour);
                             SetAutoForeColor(buffer_btn);
                             buffer_btn.Refresh();
                             if (isSlowMotionActive)
@@ -593,8 +579,6 @@ namespace AlphaStar
             {
                 for (int y = -1; y < 2; y++)
                 {
-                    //Console.WriteLine($"x: {x}, y: {y}");
-
                     //Skip middle coords which corresponds to the current node
                     if (x == 0 && y == 0)
                         continue;
@@ -607,28 +591,10 @@ namespace AlphaStar
                         continue;
 
                     Node tmp = GetNodeByCoords(new_X, new_Y);
-                    Button btn = GetButtonByCoords(new_X, new_Y);
-                    //Console.WriteLine($"Pre GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
 
                     if (tmp != null && !neighbours.Contains(tmp) )
                     {
-                        //Console.WriteLine($"GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
                         neighbours.Add(tmp);
-
-                        //if (tmp.color == Color.White)
-                        //{
-                        //    tmp.color = Color.Green;
-                        //    btn.BackColor = tmp.color;
-                        //    if (buttonSize.Width >= 50)
-                        //        btn.Text = btn.Name;
-                        //    buttonsWithColor.Add(btn);
-
-                        //    SetAutoForeColor(btn);
-                        //    btn.Refresh();
-                        //    if (isSlowMotionActive)
-                        //        Thread.Sleep(time_in_ms);
-                        //}
-
                     }
                 }
             }
@@ -641,10 +607,10 @@ namespace AlphaStar
             int traveling_cost_X = 1;
             int traveling_cost_Y = 1;
 
-            int dist_X = traveling_cost_X * Math.Abs(node_A.X - node_B.X);
-            int dist_Y = traveling_cost_Y * Math.Abs(node_A.Y - node_B.Y);
+            int dist_X = Math.Abs(node_A.X - node_B.X);
+            int dist_Y = Math.Abs(node_A.Y - node_B.Y);
 
-            return dist_X + dist_Y;
+            return traveling_cost_X*dist_X + traveling_cost_Y*dist_Y;
         }
 
         private void RetracePath(Node startingNode, Node endingNode)
