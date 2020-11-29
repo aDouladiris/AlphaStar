@@ -34,6 +34,7 @@ namespace AlphaStar
         bool phaseOne = false;
         bool phaseTwo = false;
         bool phaseThree = false;
+        Panel grid;
 
         public AlphaStarAlgorithm()
         {
@@ -41,6 +42,7 @@ namespace AlphaStar
 
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
+            grid = grid_panel;
 
             CheckConditions();
 
@@ -185,7 +187,7 @@ namespace AlphaStar
                 (phaseOne && phaseTwo && !phaseThree && _sender.BackColor == Color.White && startButton == null)
                 )
             {
-                Console.WriteLine("blue null");
+                //Console.WriteLine("blue null");
                 _sender.BackColor = Color.Blue;
                 startButton = _sender;
 
@@ -204,7 +206,7 @@ namespace AlphaStar
             //Blue button !null
             else if (_sender.BackColor == Color.White && startButton != null && phaseOne && phaseTwo && !phaseThree)
             {
-                Console.WriteLine("blue !null");
+                //Console.WriteLine("blue !null");
                 startButton.BackColor = Color.White;
                 //Assign the previous color to the node            
                 Node previousNode = (Node)startButton.Tag;
@@ -235,7 +237,7 @@ namespace AlphaStar
                 (phaseOne && phaseTwo && phaseThree && _sender.BackColor == Color.White && finishButton == null)
                 )
             {
-                Console.WriteLine("red null");
+                //Console.WriteLine("red null");
                 _sender.BackColor = Color.Red;
                 finishButton = _sender;
 
@@ -255,7 +257,7 @@ namespace AlphaStar
             else if (_sender.BackColor == Color.White && finishButton != null && phaseOne && phaseTwo && phaseThree)
             {             
 
-                Console.WriteLine("red !null");
+                //Console.WriteLine("red !null");
                 finishButton.BackColor = Color.White;
                 //Assign the previous color to the node            
                 Node previousNode = (Node)finishButton.Tag;
@@ -334,7 +336,7 @@ namespace AlphaStar
                 }
 
                 algo_button.BackColor = Color.DodgerBlue;
-                Console.WriteLine("algob: " + BackColor.GetBrightness() );
+                //Console.WriteLine("algob: " + BackColor.GetBrightness() );
                 SetAutoForeColor(algo_button);
                 //algo_button.ForeColor = Color.White;
                 return false;
@@ -502,8 +504,12 @@ namespace AlphaStar
 
                 //???????
                 Button currentNode_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
-                if (currentNode_btn.BackColor == Color.Gray)
-                    continue;
+                //if (currentNode_btn.BackColor == Color.Gray)
+                //{
+                //    Console.WriteLine("gray node to skip: " + currentNode_btn.Name);
+                //    continue;
+                //}
+
 
                 currentNode_btn.BackColor = Color.Gray;
                 SetAutoForeColor(currentNode_btn);
@@ -527,7 +533,11 @@ namespace AlphaStar
                 {
                     
                     if (closedSet.Contains(neighbour) || neighbour.color == Color.Black)
+                    {
+                        Button neigh = GetButtonByCoords(neighbour.X, neighbour.Y);
+                        Console.WriteLine("neigh node to skip: " + neigh.Name);
                         continue;
+                    }                        
  
                     int currentNodeToNeighbourNode = currentNode.G_cost + GetDistance(currentNode, neighbour);
 
@@ -553,13 +563,13 @@ namespace AlphaStar
         {
             List<Node> neighbours = new List<Node>();
 
-            Console.WriteLine($"Current node: {node.X}, {node.Y} : {node.color} ");
+            //Console.WriteLine($"Current node: {node.X}, {node.Y} : {node.color} ");
 
             for (int x = -1; x < 2; x++)
             {
                 for (int y = -1; y < 2; y++)
                 {
-                    Console.WriteLine($"x: {x}, y: {y}");
+                    //Console.WriteLine($"x: {x}, y: {y}");
 
                     //Skip middle coords which corresponds to the current node
                     if (x == 0 && y == 0)
@@ -578,7 +588,7 @@ namespace AlphaStar
 
                     if (tmp != null && !neighbours.Contains(tmp) )
                     {
-                        Console.WriteLine($"GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
+                        //Console.WriteLine($"GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
                         neighbours.Add(tmp);
 
                         if (tmp.color == Color.White)
@@ -594,8 +604,6 @@ namespace AlphaStar
                             if (isSlowMotionActive)
                                 Thread.Sleep(time_in_ms);
                         }
-
-
 
                     }
                 }
@@ -674,7 +682,6 @@ namespace AlphaStar
         private void ParseTimeString(string timerStr)
         {            
             duration_label.Text = "Διάρκεια";
-            Console.WriteLine("L: " + timerStr.Length);
 
             string desc = "";
             string result = "";
@@ -693,10 +700,6 @@ namespace AlphaStar
 
                 desc = "Δευτερόλεπτα:\nΧιλ. δευτ/ου:";
                 result = $"{secs}\n{msecs}";
-
-                Console.WriteLine("msecs: " + msecs);
-                Console.WriteLine("secs: " + secs);
-
 
             }
             else if (timerStr.Length > 6 && timerStr.Length <= 9)
@@ -719,11 +722,6 @@ namespace AlphaStar
                 string mins = timerStr.Substring(timerStr.Length - 9, 3);
                 string hours = timerStr.Substring(0, timerStr.Length - 9);
 
-                Console.WriteLine("msecs: " + msecs);
-                Console.WriteLine("secs: " + secs);
-                Console.WriteLine("mins: " + mins);
-                Console.WriteLine("hours: " + hours);
-
                 desc = "Ώρες:\nΛεπτά:\nΔευτερόλεπτα:\nΧιλ. δευτ/ου:";
                 result = $"{hours}\n{mins}\n{secs}\n{msecs}";
 
@@ -738,10 +736,6 @@ namespace AlphaStar
             timer_values_label.Text = result;
 
             timer_label.Height = timer_values_label.Height;
-            Console.WriteLine("f1: " + timer_label.Font);
-            Console.WriteLine("f2: " + timer_values_label.Font);
-            Console.WriteLine("h1: " + timer_label.Height);
-            Console.WriteLine("h2: " + timer_values_label.Height);
         }
 
         private void obstacles_button_Click(object sender, EventArgs e)
@@ -826,22 +820,15 @@ namespace AlphaStar
                 //Debug
                 foreach (Button b in grid_panel.Controls)
                 {
-                    if (b.Text.Equals(""))
-                    {
+                    string[] buffer = b.Name.Split('_');
 
-                        string[] buffer = b.Name.Split('_');
+                    b.Text = $"I: {grid_panel.Controls.IndexOf(b)}\nX: {buffer[0]}\nY: {buffer[1]}";
+                    b.TextAlign = ContentAlignment.MiddleLeft;
+                    b.FlatAppearance.BorderSize = 1;
+                    b.FlatAppearance.BorderColor = Color.Black;
 
-                        b.Text = $"I: {grid_panel.Controls.IndexOf(b)}\nX: {buffer[0]}\nY: {buffer[1]}";
-                        b.TextAlign = ContentAlignment.MiddleLeft;
-                        b.FlatAppearance.BorderSize = 1;
-                        b.FlatAppearance.BorderColor = Color.Black;
+                    SetAutoForeColor(b);                   
 
-                        SetAutoForeColor(b);
-                    }
-                    else
-                    {
-                        b.Text = "";
-                    }
                 }
             }
 
@@ -868,12 +855,23 @@ namespace AlphaStar
 
         private void resize_button_Click(object sender, EventArgs e)
         {
-            foreach(Control c in gridControlList)
-            {
-                c.Dispose();
-            }
-            this.Refresh();
-            grid_panel.Refresh();
+            //foreach (Control c in gridControlList)
+            //{
+            //    c.Dispose();
+            //}
+            ////this.Refresh();
+            //grid_panel.Refresh();
+
+            grid_panel.Dispose();
+
+            grid = new Panel();
+
+            startButton = null;
+            finishButton = null;
+
+            duration_label.Text = "";
+            timer_label.Text = "";
+            timer_values_label.Text = "";
 
             string[] axis_dimensions = Helpers.ShowDialog("Διαλέξτε το μέγεθος κάθε τετραπλεύρου του χάρτη", "Μέγεθος Τετράπλευρου", 80, 80);
             buttonSize = new Size(int.Parse(axis_dimensions[0]), int.Parse(axis_dimensions[1]));
