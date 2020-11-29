@@ -17,7 +17,7 @@ namespace AlphaStar
 
         List<Button> buttonsWithColor = new List<Button>();
         List<Button> buttonsWithObstacles = new List<Button>();
-        List<Control> gridControlList = new List<Control>();
+        List<Label> gridLabelList = new List<Label>();
         List<Control> controlPanel = new List<Control>();
         List<Control> controlPanelPhases = new List<Control>();
         Button startButton = null;
@@ -34,15 +34,25 @@ namespace AlphaStar
         bool phaseOne = false;
         bool phaseTwo = false;
         bool phaseThree = false;
-        Panel grid;
+        Panel grid_panel;
 
         public AlphaStarAlgorithm()
         {
             InitializeComponent();
 
             this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
-            grid = grid_panel;
+            this.WindowState = FormWindowState.Maximized;            
+
+            grid_panel = new Panel() 
+            {
+                Name = "grid_panel",
+                BackColor = Color.Gainsboro,
+                BorderStyle = BorderStyle.FixedSingle,
+                Location = new Point(12,12),
+                Size = new Size(1464, 651)
+            };
+
+            this.Controls.Add(grid_panel);
 
             CheckConditions();
 
@@ -104,7 +114,6 @@ namespace AlphaStar
                     tmp.Tag = new Node(i, j, tmp.BackColor);
                     tmp.Click += Tmp_Click;
                     grid_panel.Controls.Add(tmp);
-                    gridControlList.Add((Control)tmp);
 
                     if (buttonSize.Width >= label_width)
                         DrawLabelsAroundGrid(i, j, buttonSize);
@@ -141,7 +150,7 @@ namespace AlphaStar
                 };
 
                 this.Controls.Add(tmpLbl_Y);
-                gridControlList.Add((Control)tmpLbl_Y);
+                gridLabelList.Add(tmpLbl_Y);
             }
             //Horizontal labels
             if (j == 0)
@@ -158,7 +167,7 @@ namespace AlphaStar
                 };
 
                 this.Controls.Add(tmpLbl_X);
-                gridControlList.Add((Control)tmpLbl_X);
+                gridLabelList.Add(tmpLbl_X);
             }
         }
 
@@ -855,16 +864,30 @@ namespace AlphaStar
 
         private void resize_button_Click(object sender, EventArgs e)
         {
-            //foreach (Control c in gridControlList)
-            //{
-            //    c.Dispose();
-            //}
-            ////this.Refresh();
-            //grid_panel.Refresh();
+            Size grid_previous_size = grid_panel.Size;
+            Point grid_previous_location = grid_panel.Location;
 
             grid_panel.Dispose();
 
-            grid = new Panel();
+            foreach (Control c in gridLabelList)
+            {                
+                c.Dispose();
+            }
+
+            grid_panel = new Panel()
+            {
+                Name = "grid_panel",
+                BackColor = Color.Gainsboro,
+                BorderStyle = BorderStyle.FixedSingle,
+                Location = grid_previous_location,
+                Size = grid_previous_size
+            };
+
+            this.Controls.Add(grid_panel);
+            grid_panel.Refresh();
+            this.Refresh();
+
+            CheckConditions();
 
             startButton = null;
             finishButton = null;

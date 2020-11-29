@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.exit_button = new System.Windows.Forms.Button();
-            this.grid_panel = new System.Windows.Forms.Panel();
             this.obstacles_button = new System.Windows.Forms.Button();
             this.algo_button = new System.Windows.Forms.Button();
             this.clear_button = new System.Windows.Forms.Button();
@@ -54,14 +53,6 @@
             this.exit_button.Text = "Έξοδος";
             this.exit_button.UseVisualStyleBackColor = false;
             this.exit_button.Click += new System.EventHandler(this.exit_button_Click);
-            // 
-            // grid_panel
-            // 
-            this.grid_panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.grid_panel.Location = new System.Drawing.Point(12, 12);
-            this.grid_panel.Name = "grid_panel";
-            this.grid_panel.Size = new System.Drawing.Size(1464, 651);
-            this.grid_panel.TabIndex = 1;
             // 
             // obstacles_button
             // 
@@ -196,7 +187,6 @@
             this.Controls.Add(this.clear_button);
             this.Controls.Add(this.algo_button);
             this.Controls.Add(this.obstacles_button);
-            this.Controls.Add(this.grid_panel);
             this.Controls.Add(this.exit_button);
             this.Name = "AlphaStarAlgorithm";
             this.Text = "Form1";
@@ -207,7 +197,6 @@
         #endregion
 
         private System.Windows.Forms.Button exit_button;
-        private System.Windows.Forms.Panel grid_panel;
         private System.Windows.Forms.Button obstacles_button;
         private System.Windows.Forms.Button algo_button;
         private System.Windows.Forms.Button clear_button;
