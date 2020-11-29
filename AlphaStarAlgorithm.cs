@@ -84,7 +84,6 @@ namespace AlphaStar
                     b.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, b.Location.Y);
                     controlPanel.Add(b);
                 }
-
             }
         }
 
@@ -117,7 +116,6 @@ namespace AlphaStar
 
                     if (buttonSize.Width >= label_width)
                         DrawLabelsAroundGrid(i, j, buttonSize);
-
                 }
             }
 
@@ -128,9 +126,6 @@ namespace AlphaStar
             //Resize panel
             grid_panel.Width = horizontal_tiles_number * buttonSize.Width + 2;
             grid_panel.Height = vertical_tiles_number * buttonSize.Height + 2;
-
-
-
         }
 
         private void DrawLabelsAroundGrid(int i, int j, Size buttonSize)
@@ -196,7 +191,6 @@ namespace AlphaStar
                 (phaseOne && phaseTwo && !phaseThree && _sender.BackColor == Color.White && startButton == null)
                 )
             {
-                //Console.WriteLine("blue null");
                 _sender.BackColor = Color.Blue;
                 startButton = _sender;
 
@@ -209,13 +203,11 @@ namespace AlphaStar
 
                 //Remove from other lists
                 if (buttonsWithObstacles.Contains(_sender))
-                    buttonsWithObstacles.Remove(_sender);
-                
+                    buttonsWithObstacles.Remove(_sender);                
             }
             //Blue button !null
             else if (_sender.BackColor == Color.White && startButton != null && phaseOne && phaseTwo && !phaseThree)
             {
-                //Console.WriteLine("blue !null");
                 startButton.BackColor = Color.White;
                 //Assign the previous color to the node            
                 Node previousNode = (Node)startButton.Tag;
@@ -239,14 +231,12 @@ namespace AlphaStar
                 //Remove from other lists
                 if (buttonsWithObstacles.Contains(_sender))
                     buttonsWithObstacles.Remove(_sender);
-
             }
             //Red button null
             else if ((_sender.BackColor == Color.Black && finishButton == null && !phaseOne && !phaseTwo && !phaseThree) || 
                 (phaseOne && phaseTwo && phaseThree && _sender.BackColor == Color.White && finishButton == null)
                 )
             {
-                //Console.WriteLine("red null");
                 _sender.BackColor = Color.Red;
                 finishButton = _sender;
 
@@ -260,13 +250,10 @@ namespace AlphaStar
                 //Remove from other lists
                 if (buttonsWithObstacles.Contains(_sender))
                     buttonsWithObstacles.Remove(_sender);
-
             }
             //Red button !null
             else if (_sender.BackColor == Color.White && finishButton != null && phaseOne && phaseTwo && phaseThree)
-            {             
-
-                //Console.WriteLine("red !null");
+            {     
                 finishButton.BackColor = Color.White;
                 //Assign the previous color to the node            
                 Node previousNode = (Node)finishButton.Tag;
@@ -290,7 +277,6 @@ namespace AlphaStar
                 //Remove from other lists
                 if (buttonsWithObstacles.Contains(_sender))
                     buttonsWithObstacles.Remove(_sender);
-
             }
             else if (_sender.BackColor != Color.Blue && _sender.BackColor != Color.Red)
             {
@@ -317,11 +303,6 @@ namespace AlphaStar
 
         private bool CheckConditions()
         {
-            if (startButton == null || finishButton == null)                
-            {
-                return false;
-            }
-
             if (startButton != null && finishButton != null)
             {
                 if (phaseNext_button != null)
@@ -337,20 +318,10 @@ namespace AlphaStar
             }
             else
             {
-                if(phaseNext_button != null)
-                {
-                    //phaseNext_button.BackColor = Color.Gray;
-                }
-
                 algo_button.BackColor = Color.DodgerBlue;
-                //Console.WriteLine("algob: " + BackColor.GetBrightness() );
                 SetAutoForeColor(algo_button);
-                //algo_button.ForeColor = Color.White;
                 return false;
-            }
-            
-                
-            
+            } 
         }
 
         private void algo_button_Click(object sender, EventArgs e)
@@ -405,15 +376,10 @@ namespace AlphaStar
                 phaseNext_button.Click += PhaseNext_button_Click;
                 controlPanelPhases.Add(phaseNext_button);
                 this.Controls.Add(phaseNext_button);
-
                 phaseOne = true;
-
             }
             else
                 RunAlphastar();
-            
-
-
         }
 
         private void PhaseNext_button_Click(object sender, EventArgs e)
@@ -457,8 +423,7 @@ namespace AlphaStar
             }
 
             if (CheckConditions())
-                RunAlphastar();
-                
+                RunAlphastar();                
         }
 
         private void RunAlphastar()
@@ -509,7 +474,7 @@ namespace AlphaStar
                 {
                     RetracePath(startingNode, endingNode);
 
-                    //Store the elapsed time
+                    ///////////Store the elapsed time///////////////////////
                     stopwatch.Stop();
                     timerStr = stopwatch.ElapsedMilliseconds.ToString();
                     ParseTimeString(timerStr);
@@ -525,14 +490,10 @@ namespace AlphaStar
                     if (closedSet.Contains(neighbour) || neighbour.color == Color.Black)                    
                         continue;
 
-                    /////////////////////////////////////////////////////////
-                    //print traversable neighbours   
+                    /////////print traversable neighbours//////////////////// 
                     neighbour.color = Color.Green;
                     buffer_btn.BackColor = neighbour.color;
-                    //if (buttonSize.Width >= 50)
-                    //    buffer_btn.Text = buffer_btn.Name;
                     buttonsWithColor.Add(buffer_btn);
-
                     SetAutoForeColor(buffer_btn);
                     buffer_btn.Refresh();
                     /////////////////////////////////////////////////////////
@@ -543,9 +504,8 @@ namespace AlphaStar
                     {
                         neighbour.G_cost = costFromCurrentNodeToNeighbourNode;
                         neighbour.H_cost = GetDistance(neighbour, endingNode);
-                        neighbour.Parent = currentNode;
-                        /////////////////////////////////////////////////////////
-                        //print costs                        
+                        neighbour.Parent = currentNode;                        
+                        /////////////////////////print costs/////////////////////                        
                         if (buttonSize.Width >= 50 )
                         {
                             buffer_btn.Text = "F: " + neighbour.F_cost.ToString() + "\nG: " + neighbour.G_cost.ToString() + "\nH: " + neighbour.H_cost + "\nD: " + GetDistance(currentNode, neighbour);
@@ -573,8 +533,6 @@ namespace AlphaStar
         {
             List<Node> neighbours = new List<Node>();
 
-            //Console.WriteLine($"Current node: {node.X}, {node.Y} : {node.color} ");
-
             for (int x = -1; x < 2; x++)
             {
                 for (int y = -1; y < 2; y++)
@@ -598,7 +556,6 @@ namespace AlphaStar
                     }
                 }
             }
-
             return neighbours;
         }
 
@@ -636,9 +593,7 @@ namespace AlphaStar
                 btn.Refresh();
                 if (isSlowMotionActive)
                     Thread.Sleep(time_in_ms);
-
             }
-
         }
 
         private Node GetNodeByCoords(int X, int Y)
@@ -680,33 +635,26 @@ namespace AlphaStar
             {
                 desc = "Χιλ. δευτ/ου:";
                 result = timerStr;
-
             }
             else if(timerStr.Length > 3 && timerStr.Length <= 6)
             {
-
                 string msecs = timerStr.Substring(timerStr.Length - 3, 3);
                 string secs = timerStr.Substring(0, timerStr.Length-3);
 
                 desc = "Δευτερόλεπτα:\nΧιλ. δευτ/ου:";
                 result = $"{secs}\n{msecs}";
-
             }
             else if (timerStr.Length > 6 && timerStr.Length <= 9)
             {
-
                 string msecs = timerStr.Substring(timerStr.Length - 3, 3);
                 string secs = timerStr.Substring(timerStr.Length - 6, 3);
                 string mins = timerStr.Substring(0, timerStr.Length - 6);
 
                 desc = "Λεπτά:\nΔευτερόλεπτα:\nΧιλ. δευτ/ου:";
                 result = $"{mins}\n{secs}\nm{msecs}";
-
-
             }
             else if (timerStr.Length > 9 && timerStr.Length <= 12)
             {
-
                 string msecs = timerStr.Substring(timerStr.Length - 3, 3);
                 string secs = timerStr.Substring(timerStr.Length - 6, 3);
                 string mins = timerStr.Substring(timerStr.Length - 9, 3);
@@ -714,17 +662,12 @@ namespace AlphaStar
 
                 desc = "Ώρες:\nΛεπτά:\nΔευτερόλεπτα:\nΧιλ. δευτ/ου:";
                 result = $"{hours}\n{mins}\n{secs}\n{msecs}";
-
-
             }
 
             timer_label.Size = Helpers.GetStringSize(desc);
             timer_label.Text = desc;
-
-            //timer_values_label.Size = Prompt.GetStringSize(result);
             timer_values_label.Location = new Point(timer_label.Location.X + timer_label.Width, timer_label.Location.Y);
             timer_values_label.Text = result;
-
             timer_label.Height = timer_values_label.Height;
         }
 
@@ -745,12 +688,8 @@ namespace AlphaStar
                     if (!buttonsWithObstacles.Contains(b))
                         buttonsWithObstacles.Add(b);
                 }
-
-                //Console.WriteLine($"All buttons: {b.Name}, {b.BackColor}");
             }
         }
-
-
 
         private void clear_button_Click(object sender, EventArgs e)
         {
@@ -772,7 +711,7 @@ namespace AlphaStar
                 b.FlatAppearance.BorderColor = Color.Black;
                 b.Refresh();                
             }
-            
+            algo_button.BackColor = Color.DodgerBlue;
             buttonsWithColor.Clear();
             CheckConditions();
         }
@@ -797,7 +736,7 @@ namespace AlphaStar
                 b.FlatAppearance.BorderColor = Color.Black;
                 b.Refresh();
             }
-
+            algo_button.BackColor = Color.DodgerBlue;
             buttonsWithObstacles.Clear();
             buttonsWithColor.Clear();
             CheckConditions();
@@ -817,11 +756,9 @@ namespace AlphaStar
                     b.FlatAppearance.BorderSize = 1;
                     b.FlatAppearance.BorderColor = Color.Black;
 
-                    SetAutoForeColor(b);                   
-
+                    SetAutoForeColor(b);
                 }
             }
-
         }
 
         private void SetAutoForeColor(Button b)
@@ -899,9 +836,5 @@ namespace AlphaStar
                 slow_motion_button.ForeColor = Color.White;
             }
         }
-
-
-
-
     }
 }

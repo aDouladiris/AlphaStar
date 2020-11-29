@@ -82,9 +82,7 @@ namespace AlphaStar
             {
                 Console.WriteLine("form exit");
                 Helpers.parent.Focus();
-            }
-
-            
+            }           
             
         }
 
@@ -108,8 +106,6 @@ namespace AlphaStar
             };
 
             Size inputTextboxSize = GetStringSize("99999");
-
-            Console.WriteLine(inputTextboxSize.Width);
 
             TextBox slowmotion_Textbox = new TextBox()
             {
@@ -136,8 +132,6 @@ namespace AlphaStar
 
             prompt.Height = (confirmButton.Location.Y + 3 * confirmButton.Height);
             prompt.Width = promptLabelSize.Width + 15;
-
-
             confirmButton.Click += (sender, e) => { prompt.Close(); };
             prompt.Controls.Add(promptLabel);
             prompt.Controls.Add(slowmotion_Textbox);
