@@ -463,7 +463,7 @@ namespace AlphaStar
 
         private void RunAlphastar()
         {
-
+            Button buffer_btn;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             string timerStr = "";
@@ -479,38 +479,42 @@ namespace AlphaStar
             //3rd
             openSet.Add(startingNode);
 
+            ////////////////////////////////////////////////
+            buffer_btn = GetButtonByCoords(startingNode.X, startingNode.Y);
+            startingNode.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
+            if (buttonSize.Width >= 50 && !buffer_btn.Text.StartsWith("F: ") && startingNode.F_cost != 0)
+            {
+                buffer_btn.Text = "F: " + startingNode.F_cost.ToString() + "\nG: " + startingNode.G_cost.ToString() + "\nH: " + startingNode.H_cost + "\nD: 0";
+                SetAutoForeColor(buffer_btn);
+                buffer_btn.Refresh();
+                if (isSlowMotionActive)
+                    Thread.Sleep(time_in_ms);
+            }
+            ////////////////////////////////////////////////////
+
             //4th
             while (openSet.Count > 0)
             {
                 Node currentNode = openSet[0];
                 for (int i = 0; i < openSet.Count; i++)
                 {
-                    /////////////////////////////////////////////////////////
-                    //print costs
-                    Button btn = GetButtonByCoords(openSet[i].X, openSet[i].Y);
-                    if (buttonSize.Width >= 50 && !btn.Text.StartsWith("F: ") && openSet[i].F_cost != 0)
-                    {
-                        btn.Text = "F: " + openSet[i].F_cost.ToString() + "\nG: " + openSet[i].G_cost.ToString() + "\nH: " + openSet[i].H_cost;
-                        SetAutoForeColor(btn);
-                        btn.Refresh();
-                        if (isSlowMotionActive)
-                            Thread.Sleep(time_in_ms);
-                    }
-                    /////////////////////////////////////////////////////////
-
                     if (openSet[i].F_cost < currentNode.F_cost)
                         currentNode = openSet[i];
                     else if (openSet[i].F_cost == currentNode.F_cost && openSet[i].H_cost < currentNode.H_cost)
                         currentNode = openSet[i];
-
                 }
 
-                //Paint gray color the validated node that will be removed from OPEN list and be added to the CLOSED list
-                Button currentNode_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
-                currentNode_btn.BackColor = Color.Gray;
-                SetAutoForeColor(currentNode_btn);
-                currentNode.color = currentNode_btn.BackColor;
+
+                /////Paint gray color the validated node that will be removed from OPEN list and be added to the CLOSED list
+                buffer_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
+                buffer_btn.BackColor = Color.Gray;
+                currentNode.color = buffer_btn.BackColor;
+                SetAutoForeColor(buffer_btn);
+                buffer_btn.Refresh();
+                if (isSlowMotionActive)
+                    Thread.Sleep(time_in_ms);
                 /////////////////////////////////////////////////////////
+
 
                 openSet.Remove(currentNode);
                 closedSet.Add(currentNode);
@@ -528,7 +532,22 @@ namespace AlphaStar
                 }
 
                 foreach (Node neighbour in GetNeighbours(currentNode))
-                {                    
+                {
+                    buffer_btn = GetButtonByCoords(neighbour.X, neighbour.Y);
+
+                    if (neighbour.color == Color.White)
+                    {
+                        neighbour.color = Color.Green;
+                        buffer_btn.BackColor = neighbour.color;
+                        if (buttonSize.Width >= 50)
+                            buffer_btn.Text = buffer_btn.Name;
+                        buttonsWithColor.Add(buffer_btn);
+
+                        SetAutoForeColor(buffer_btn);
+                        buffer_btn.Refresh();
+                    }
+
+
                     if (closedSet.Contains(neighbour) || neighbour.color == Color.Black)                    
                         continue;
                                        
@@ -538,7 +557,19 @@ namespace AlphaStar
                     {
                         neighbour.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
                         neighbour.Parent = currentNode;
-                        if(!openSet.Contains(neighbour))
+                        /////////////////////////////////////////////////////////
+                        //print costs
+                        
+                        if (buttonSize.Width >= 50 && !buffer_btn.Text.StartsWith("F: ") && neighbour.F_cost != 0)
+                        {
+                            buffer_btn.Text = "F: " + neighbour.F_cost.ToString() + "\nG: " + neighbour.G_cost.ToString() + "\nH: " + neighbour.H_cost + "\nD: " + pathFromCurrentNodeToNeighbour;
+                            SetAutoForeColor(buffer_btn);
+                            buffer_btn.Refresh();
+                            if (isSlowMotionActive)
+                                Thread.Sleep(time_in_ms);
+                        }
+                        /////////////////////////////////////////////////////////
+                        if (!openSet.Contains(neighbour))
                             openSet.Add(neighbour);
                     }
                 }
@@ -584,19 +615,19 @@ namespace AlphaStar
                         //Console.WriteLine($"GetNeighbours node: {tmp.X}_{tmp.Y} : {tmp.color} ");
                         neighbours.Add(tmp);
 
-                        if (tmp.color == Color.White)
-                        {
-                            tmp.color = Color.Green;
-                            btn.BackColor = tmp.color;
-                            if (buttonSize.Width >= 50)
-                                btn.Text = btn.Name;
-                            buttonsWithColor.Add(btn);
+                        //if (tmp.color == Color.White)
+                        //{
+                        //    tmp.color = Color.Green;
+                        //    btn.BackColor = tmp.color;
+                        //    if (buttonSize.Width >= 50)
+                        //        btn.Text = btn.Name;
+                        //    buttonsWithColor.Add(btn);
 
-                            SetAutoForeColor(btn);
-                            btn.Refresh();
-                            if (isSlowMotionActive)
-                                Thread.Sleep(time_in_ms);
-                        }
+                        //    SetAutoForeColor(btn);
+                        //    btn.Refresh();
+                        //    if (isSlowMotionActive)
+                        //        Thread.Sleep(time_in_ms);
+                        //}
 
                     }
                 }
