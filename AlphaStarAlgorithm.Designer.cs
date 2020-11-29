@@ -139,7 +139,6 @@
             this.timer_label.Name = "timer_label";
             this.timer_label.Size = new System.Drawing.Size(60, 61);
             this.timer_label.TabIndex = 8;
-            this.timer_label.Click += new System.EventHandler(this.timer_label_Click);
             // 
             // slow_motion_button
             // 

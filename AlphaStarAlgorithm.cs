@@ -317,9 +317,7 @@ namespace AlphaStar
 
         private bool CheckConditions()
         {
-            if ((startButton == null && finishButton != null) ||
-                (startButton != null && finishButton == null)
-                )
+            if (startButton == null || finishButton == null)                
             {
                 return false;
             }
@@ -359,9 +357,9 @@ namespace AlphaStar
         {
 
 
-            if (startButton == null || finishButton == null)
+            if (!CheckConditions())
             {
-
+                //Create wizard
                 foreach(Control c in controlPanel)
                 {
                     c.Visible = false;
@@ -405,9 +403,6 @@ namespace AlphaStar
                     ForeColor = Color.White
                 };
                 phaseNext_button.Click += PhaseNext_button_Click;
-                //phaseNext_button.Height -= 5;
-                //phaseNext_button.Width += 5;
-
                 controlPanelPhases.Add(phaseNext_button);
                 this.Controls.Add(phaseNext_button);
 
@@ -415,10 +410,8 @@ namespace AlphaStar
 
             }
             else
-            {                
-                if (CheckConditions())
-                    RunAlphastar();
-            }
+                RunAlphastar();
+            
 
 
         }
@@ -492,6 +485,7 @@ namespace AlphaStar
                 Node currentNode = openSet[0];
                 for (int i = 0; i < openSet.Count; i++)
                 {
+                    /////////////////////////////////////////////////////////
                     //print costs
                     Button btn = GetButtonByCoords(openSet[i].X, openSet[i].Y);
                     if (buttonSize.Width >= 50 && !btn.Text.StartsWith("F: ") && openSet[i].F_cost != 0)
@@ -511,20 +505,12 @@ namespace AlphaStar
 
                 }
 
-                //???????
+                //Paint gray color the validated node that will be removed from OPEN list and be added to the CLOSED list
                 Button currentNode_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
-                //if (currentNode_btn.BackColor == Color.Gray)
-                //{
-                //    Console.WriteLine("gray node to skip: " + currentNode_btn.Name);
-                //    continue;
-                //}
-
-
                 currentNode_btn.BackColor = Color.Gray;
                 SetAutoForeColor(currentNode_btn);
                 currentNode.color = currentNode_btn.BackColor;
-
-
+                /////////////////////////////////////////////////////////
 
                 openSet.Remove(currentNode);
                 closedSet.Add(currentNode);
@@ -532,25 +518,23 @@ namespace AlphaStar
                 if (currentNode == endingNode)
                 {
                     RetracePath(startingNode, endingNode);
+
+                    //Store the elapsed time
                     stopwatch.Stop();
                     timerStr = stopwatch.ElapsedMilliseconds.ToString();
                     ParseTimeString(timerStr);
+                    ////////////////////////////////////////////////////////
                     return;
                 }
 
                 foreach (Node neighbour in GetNeighbours(currentNode))
-                {
-                    
-                    if (closedSet.Contains(neighbour) || neighbour.color == Color.Black)
-                    {
-                        Button neigh = GetButtonByCoords(neighbour.X, neighbour.Y);
-                        Console.WriteLine("neigh node to skip: " + neigh.Name);
+                {                    
+                    if (closedSet.Contains(neighbour) || neighbour.color == Color.Black)                    
                         continue;
-                    }                        
- 
-                    int currentNodeToNeighbourNode = currentNode.G_cost + GetDistance(currentNode, neighbour);
+                                       
+                    int pathFromCurrentNodeToNeighbour = currentNode.G_cost + GetDistance(currentNode, neighbour);
 
-                    if (currentNodeToNeighbourNode < neighbour.G_cost || !openSet.Contains(neighbour))
+                    if (pathFromCurrentNodeToNeighbour < neighbour.G_cost || !openSet.Contains(neighbour))
                     {
                         neighbour.GetF_cost(startingNode.X, startingNode.Y, endingNode.X, endingNode.Y);
                         neighbour.Parent = currentNode;
@@ -919,10 +903,7 @@ namespace AlphaStar
             }
         }
 
-        private void timer_label_Click(object sender, EventArgs e)
-        {
 
-        }
 
 
     }
