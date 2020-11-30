@@ -225,10 +225,10 @@ namespace AlphaStar
                 //Assign the new color to the node            
                 _senderNode.color = _sender.BackColor;
 
-                if (finishButton == null)
-                {
-                    MessageBox.Show("Δεν έχετε ορίσει σημείο τερματισμού");
-                }
+                //if (finishButton == null)
+                //{
+                //    MessageBox.Show("Δεν έχετε ορίσει σημείο τερματισμού");
+                //}
             }
             //Red button null
             else if ((_sender.BackColor == Color.Black && finishButton == null && !phaseOne && !phaseTwo && !phaseThree) || 
@@ -269,10 +269,10 @@ namespace AlphaStar
                 //Assign the new color to the node            
                 _senderNode.color = _sender.BackColor;
 
-                if (startButton == null)
-                {
-                    MessageBox.Show("Δεν έχετε ορίσει σημείο εκκίνησης");
-                }
+               //if (startButton == null)
+               // {
+               //     MessageBox.Show("Δεν έχετε ορίσει σημείο εκκίνησης");
+               // } 
             }
             else if (_sender.BackColor != Color.Blue && _sender.BackColor != Color.Red)
             {
@@ -289,7 +289,8 @@ namespace AlphaStar
             }
 
             _sender.Refresh();
-            if (CheckConditions() && _sender == startButton || _sender == finishButton)
+
+            if (CheckConditions() && phaseOne && (_sender == startButton || _sender == finishButton))
             {
                 if (startButton.BackColor == Color.Lime || finishButton.BackColor == Color.Lime)
                     clear_button_Click(null, null);
