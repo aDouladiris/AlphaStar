@@ -31,6 +31,7 @@ namespace AlphaStar
         Label phase_label;
         Label phaseDescription_label;
         Button phaseNext_button;
+        Button phasePrevious_button;
         bool phaseOne = false;
         bool phaseTwo = false;
         bool phaseThree = false;
@@ -67,7 +68,6 @@ namespace AlphaStar
             controlPanel.Add(timer_label);
             timer_values_label.Location = new Point(timer_label.Location.X + timer_label.Width, timer_label.Location.Y);
             controlPanel.Add(timer_values_label);
-
 
             List<Button> btns = new List<Button> { exit_button, obstacles_button, algo_button, clear_button, clearAll_button, debug_button, resize_button, slow_motion_button };
 
@@ -206,16 +206,17 @@ namespace AlphaStar
                     buttonsWithObstacles.Remove(_sender);                
             }
             //Blue button !null
-            else if (_sender.BackColor == Color.White && startButton != null && phaseOne && phaseTwo && !phaseThree)
+            else if (startButton != null && phaseOne && phaseTwo && !phaseThree)
             {
+                if (_sender.BackColor == Color.Black)
+                {
+                    return;
+                }
+                startButton.Text = "";
                 startButton.BackColor = Color.White;
                 //Assign the previous color to the node            
                 Node previousNode = (Node)startButton.Tag;
                 previousNode.color = startButton.BackColor;
-
-                //Remove from color list
-                if (buttonsWithColor.Contains(startButton))
-                    buttonsWithColor.Remove(startButton);
                 startButton.Refresh();
 
                 _sender.BackColor = Color.Blue;
@@ -224,13 +225,10 @@ namespace AlphaStar
                 //Assign the new color to the node            
                 _senderNode.color = _sender.BackColor;
 
-                //Add to color list
-                if (!buttonsWithColor.Contains(_sender))
-                    buttonsWithColor.Add(_sender);
-
-                //Remove from other lists
-                if (buttonsWithObstacles.Contains(_sender))
-                    buttonsWithObstacles.Remove(_sender);
+                if (finishButton == null)
+                {
+                    MessageBox.Show("Δεν έχετε ορίσει σημείο τερματισμού");
+                }
             }
             //Red button null
             else if ((_sender.BackColor == Color.Black && finishButton == null && !phaseOne && !phaseTwo && !phaseThree) || 
@@ -252,16 +250,17 @@ namespace AlphaStar
                     buttonsWithObstacles.Remove(_sender);
             }
             //Red button !null
-            else if (_sender.BackColor == Color.White && finishButton != null && phaseOne && phaseTwo && phaseThree)
-            {     
+            else if (finishButton != null && phaseOne && phaseTwo && phaseThree)
+            {
+                if(_sender.BackColor == Color.Black)
+                {
+                    return;
+                }
+                finishButton.Text = "";
                 finishButton.BackColor = Color.White;
                 //Assign the previous color to the node            
                 Node previousNode = (Node)finishButton.Tag;
                 previousNode.color = finishButton.BackColor;
-
-                //Remove from color list
-                if (buttonsWithColor.Contains(finishButton))
-                    buttonsWithColor.Remove(finishButton);
                 finishButton.Refresh();
 
                 _sender.BackColor = Color.Red;
@@ -270,13 +269,10 @@ namespace AlphaStar
                 //Assign the new color to the node            
                 _senderNode.color = _sender.BackColor;
 
-                //Add to color list
-                if (!buttonsWithColor.Contains(_sender))
-                    buttonsWithColor.Add(_sender);
-
-                //Remove from other lists
-                if (buttonsWithObstacles.Contains(_sender))
-                    buttonsWithObstacles.Remove(_sender);
+                if (startButton == null)
+                {
+                    MessageBox.Show("Δεν έχετε ορίσει σημείο εκκίνησης");
+                }
             }
             else if (_sender.BackColor != Color.Blue && _sender.BackColor != Color.Red)
             {
@@ -292,28 +288,41 @@ namespace AlphaStar
                     buttonsWithObstacles.Remove(_sender);
             }
 
-            CheckConditions();
             _sender.Refresh();
+            if (CheckConditions() && _sender == startButton || _sender == finishButton)
+            {
+                if (startButton.BackColor == Color.Lime || finishButton.BackColor == Color.Lime)
+                    clear_button_Click(null, null);
+                RunAlphastar();
+            }
         }
 
         private void exit_button_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            if(!phaseOne && !phaseTwo && !phaseThree)
+            {
+                Application.Exit();
+            }
+            else
+            {
+                phaseOne = false;
+                phaseTwo = false;
+                phaseThree = false;
+
+                foreach (Control c in controlPanelPhases)
+                    c.Dispose();
+
+                foreach (Control c in controlPanel)
+                    c.Visible = true;
+            }
         }
 
         private bool CheckConditions()
         {
             if (startButton != null && finishButton != null)
-            {
-                if (phaseNext_button != null)
-                {
-                    phaseNext_button.BackColor = Color.Lime;
-                    phaseNext_button.ForeColor = Color.Black;
-                }
-                    
+            {                    
                 algo_button.BackColor = Color.Lime;
                 SetAutoForeColor(algo_button);
-
                 return true;
             }
             else
@@ -326,7 +335,6 @@ namespace AlphaStar
 
         private void algo_button_Click(object sender, EventArgs e)
         {
-
 
             if (!CheckConditions())
             {
@@ -343,8 +351,7 @@ namespace AlphaStar
                     Location = algo_button.Location,
                     Font = new Font("Microsoft Sans Serif", 12, FontStyle.Bold),
                     Text = "Στάδιο Εμποδίων",
-                    ForeColor = Color.OrangeRed,                    
-                    //BorderStyle = BorderStyle.FixedSingle
+                    ForeColor = Color.OrangeRed
                 };
 
                 controlPanelPhases.Add(phase_label);
@@ -356,8 +363,7 @@ namespace AlphaStar
                     Size = clear_button.Size,
                     Location = clear_button.Location,
                     Font = new Font("Microsoft Sans Serif", 10),
-                    Text = "Δημιουργία εμποδίων",
-                    //BorderStyle = BorderStyle.FixedSingle
+                    Text = "Δημιουργία εμποδίων"
                 };
 
                 controlPanelPhases.Add(phaseDescription_label);
@@ -376,6 +382,21 @@ namespace AlphaStar
                 phaseNext_button.Click += PhaseNext_button_Click;
                 controlPanelPhases.Add(phaseNext_button);
                 this.Controls.Add(phaseNext_button);
+
+                phasePrevious_button = new Button()
+                {
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Size = new Size(100, 45),
+                    Location = new Point(exit_button.Location.X - 15, phaseNext_button.Location.Y + phaseNext_button.Height),
+                    Font = clearAll_button.Font,
+                    Text = "Προηγούμενο",
+                    BackColor = Color.DodgerBlue,
+                    ForeColor = Color.White
+                };
+                phasePrevious_button.Click += PhasePrevious_button_Click;
+                controlPanelPhases.Add(phasePrevious_button);
+                this.Controls.Add(phasePrevious_button);
+
                 phaseOne = true;
             }
             else
@@ -392,38 +413,38 @@ namespace AlphaStar
             }
             else if (phaseOne && phaseTwo && !phaseThree)
             {
-                if (startButton == null)
-                {
-                    MessageBox.Show("Δεν έχετε ορίσει σημείο εκκίνησης");
-                    return;
-                }
-
                 phase_label.Text = "Στάδιο Τερματισμού";
                 phaseDescription_label.Text = "Ορίστε το σημείο τερματισμού";
-                phaseNext_button.Text = "Εκτέλεση αλγορίθμου";
+                phaseNext_button.Visible = false;
                 phaseThree = true;
-            }
-            else if(phaseOne && phaseTwo && phaseThree)
-            {
-                if (finishButton == null)
-                {
-                    MessageBox.Show("Δεν έχετε ορίσει σημείο τερματισμού");
-                    return;
-                }
+            }         
+        }
 
-                phaseOne = false;
-                phaseTwo = false;
+        private void PhasePrevious_button_Click(object sender, EventArgs e)
+        {
+            if (phaseOne && phaseTwo && phaseThree)
+            {
+                phase_label.Text = "Στάδιο Εκκίνησης";
+                phaseDescription_label.Text = "Ορίστε το σημείο εκκίνησης";
+                phaseNext_button.Visible = true;
                 phaseThree = false;
+            }
+            else if (phaseOne && phaseTwo && !phaseThree)
+            {
+                phase_label.Text = "Στάδιο Εμποδίων";
+                phaseDescription_label.Text = "Δημιουργία εμποδίων";
+                phaseTwo = false;
+            }
+            else if (phaseOne && !phaseTwo && !phaseThree)
+            {
+                phaseOne = false;
 
                 foreach (Control c in controlPanelPhases)
                     c.Dispose();
 
                 foreach (Control c in controlPanel)
-                    c.Visible = true;                
+                    c.Visible = true;
             }
-
-            if (CheckConditions())
-                RunAlphastar();                
         }
 
         private void RunAlphastar()
@@ -526,7 +547,6 @@ namespace AlphaStar
             ParseTimeString(timerStr);
             MessageBox.Show("Δε βρέθηκε μονοπάτι");
         }
-
 
 
         private List<Node> GetNeighbours(Node node)
@@ -693,8 +713,20 @@ namespace AlphaStar
 
         private void clear_button_Click(object sender, EventArgs e)
         {
-            startButton = null;
-            finishButton = null;
+            if (!buttonsWithColor.Contains(startButton) && startButton != null)
+                buttonsWithColor.Add(startButton);
+
+            if (!buttonsWithColor.Contains(finishButton) && finishButton != null)
+                buttonsWithColor.Add(finishButton);
+
+            if (sender != null)
+            {
+                startButton = null;
+                finishButton = null;
+            }
+
+
+
             Node n;
             duration_label.Text = "";
             timer_label.Text = "";
@@ -702,6 +734,7 @@ namespace AlphaStar
 
             foreach (Button b in buttonsWithColor)
             {
+                //Console.WriteLine("b start: " + b.Name);
                 n = (Node)b.Tag;
                 n.color = Color.White;
                 b.BackColor = n.color;
