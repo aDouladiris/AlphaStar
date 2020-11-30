@@ -221,11 +221,6 @@ namespace AlphaStar
 
                 //Assign the new color to the node            
                 _senderNode.color = _sender.BackColor;
-
-                //if (finishButton == null)
-                //{
-                //    MessageBox.Show("Δεν έχετε ορίσει σημείο τερματισμού");
-                //}
             }
             //Red button null
             else if ((_sender.BackColor == Color.Black && finishButton == null && !phaseOne && !phaseTwo && !phaseThree) || 
@@ -265,11 +260,6 @@ namespace AlphaStar
 
                 //Assign the new color to the node            
                 _senderNode.color = _sender.BackColor;
-
-               //if (startButton == null)
-               // {
-               //     MessageBox.Show("Δεν έχετε ορίσει σημείο εκκίνησης");
-               // } 
             }
             else if (_sender.BackColor != Color.Blue && _sender.BackColor != Color.Red)
             {
@@ -450,22 +440,28 @@ namespace AlphaStar
             Button buffer_btn;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            string timerStr = "";
+            string timerStr;
 
-            //1st
+            ////////////////////////////1 step//////////////////////////////
             List<Node> openSet = new List<Node>();
-            //2nd
+            ////////////////////////////////////////////////////////////////
+
+            ////////////////////////////2 step//////////////////////////////
             List<Node> closedSet = new List<Node>();
+            ////////////////////////////////////////////////////////////////
 
             Node startingNode = (Node)startButton.Tag;
             Node endingNode = (Node)finishButton.Tag;
 
-            //3rd
+            ////////////////////////////3 step//////////////////////////////
             openSet.Add(startingNode);
+            ////////////////////////////////////////////////////////////////
 
-            //4th
+            /////////4 step///////////
             while (openSet.Count > 0)
+            /////////////////////////
             {
+                //////////////////////////////////////4a step//////////////////////////////////////////////////////
                 Node currentNode = openSet[0];
                 for (int i = 0; i < openSet.Count; i++)
                 {
@@ -474,57 +470,76 @@ namespace AlphaStar
                     else if (openSet[i].F_cost == currentNode.F_cost && openSet[i].H_cost < currentNode.H_cost)
                         currentNode = openSet[i];
                 }
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-                /////Paint gray color the validated node that will be removed from OPEN list and be added to the CLOSED list
+                //Paint gray color the validated node that will be removed from OPEN list and be added to the CLOSED list
                 buffer_btn = GetButtonByCoords(currentNode.X, currentNode.Y);
                 buffer_btn.BackColor = Color.Gray;
                 currentNode.color = buffer_btn.BackColor;
                 SetAutoForeColor(buffer_btn);
                 buffer_btn.Refresh();
                 if (isSlowMotionActive)
-                    Thread.Sleep(time_in_ms);
-                /////////////////////////////////////////////////////////
+                    Thread.Sleep(time_in_ms);               
 
-
+                ///////////4b step/////////////
                 openSet.Remove(currentNode);
+                ///////////////////////////////
+
+                ///////////4c step/////////////
                 closedSet.Add(currentNode);
-
+                ///////////////////////////////
+                
+                ////////////4d step////////////
                 if (currentNode == endingNode)
+                ///////////////////////////////
                 {
+                    ////////////////////4di step//////////////////////////////
                     RetracePath(startingNode, endingNode);
-
-                    ///////////Store the elapsed time///////////////////////
+                    //////////////////////////////////////////////////////////
+                    
+                    //Store the elapsed time
                     stopwatch.Stop();
                     timerStr = stopwatch.ElapsedMilliseconds.ToString();
-                    ParseTimeString(timerStr);
-                    ////////////////////////////////////////////////////////
+                    ParseTimeString(timerStr);                    
                     return;
-                }
+                }                
 
+                //////////////////////4e step//////////////////////////
                 foreach (Node neighbour in GetNeighbours(currentNode))
+                ///////////////////////////////////////////////////////
                 {
                     buffer_btn = GetButtonByCoords(neighbour.X, neighbour.Y);
 
-
-                    if (closedSet.Contains(neighbour) || neighbour.color == Color.Black)                    
+                    ///////////////////////////////4ei step///////////////////////////////
+                    if (closedSet.Contains(neighbour) || neighbour.color == Color.Black)
+                    ////////////////////////////////////////////////////////////////////
+                    ///////////////////////////////4ei1 step/////////////////////////////
                         continue;
+                    ////////////////////////////////////////////////////////////////////
 
-                    /////////print traversable neighbours//////////////////// 
+                    //print traversable neighbours 
                     neighbour.color = Color.Green;
                     buffer_btn.BackColor = neighbour.color;
                     buttonsWithColor.Add(buffer_btn);
                     SetAutoForeColor(buffer_btn);
-                    buffer_btn.Refresh();
-                    /////////////////////////////////////////////////////////
+                    buffer_btn.Refresh();                    
 
                     int costFromCurrentNodeToNeighbourNode = currentNode.G_cost + GetDistance(currentNode, neighbour);
 
+                    ////////////////////////////////////////////4eii step//////////////////////////////////////
                     if (costFromCurrentNodeToNeighbourNode < neighbour.G_cost || !openSet.Contains(neighbour))
+                    ///////////////////////////////////////////////////////////////////////////////////////////
                     {
-                        neighbour.G_cost = costFromCurrentNodeToNeighbourNode;
+                        ///////////////////////4eii1a step/////////////////////
+                        neighbour.G_cost = costFromCurrentNodeToNeighbourNode;                        
                         neighbour.H_cost = GetDistance(neighbour, endingNode);
-                        neighbour.Parent = currentNode;                        
-                        /////////////////////////print costs/////////////////////                        
+                        //////////////////////////////////////////////////////
+
+                        //////////4eii1b step////////////
+                        neighbour.Parent = currentNode;
+                        /////////////////////////////////
+                        
+                        //print costs
                         if (buttonSize.Width >= 50 )
                         {
                             buffer_btn.Text = "F: " + neighbour.F_cost.ToString() + "\nG: " + neighbour.G_cost.ToString() + "\nH: " + neighbour.H_cost + "\nD: " + GetDistance(currentNode, neighbour);
@@ -533,19 +548,22 @@ namespace AlphaStar
                             if (isSlowMotionActive)
                                 Thread.Sleep(time_in_ms);
                         }
-                        /////////////////////////////////////////////////////////
+
+                        //////////4eiii step//////////////
                         if (!openSet.Contains(neighbour))
+                        /////////////////////////////////
+                            //////4eiii1 step//////
                             openSet.Add(neighbour);
+                            ///////////////////////
                     }
-                }
-            }
+                }                
+            }            
 
             stopwatch.Stop();
             timerStr = stopwatch.ElapsedMilliseconds.ToString();
             ParseTimeString(timerStr);
             MessageBox.Show("Δε βρέθηκε μονοπάτι");
         }
-
 
         private List<Node> GetNeighbours(Node node)
         {
@@ -575,6 +593,26 @@ namespace AlphaStar
                 }
             }
             return neighbours;
+        }
+
+        private void obstacles_button_Click(object sender, EventArgs e)
+        {
+            Random r = new Random();
+
+            foreach (Button b in grid_panel.Controls)
+            {
+                int colorProbability = r.Next(0, 2);
+
+                if (colorProbability == 1)
+                {
+                    b.BackColor = Color.Black;
+                    Node n = (Node)b.Tag;
+                    n.color = b.BackColor;
+
+                    if (!buttonsWithObstacles.Contains(b))
+                        buttonsWithObstacles.Add(b);
+                }
+            }
         }
 
         private int GetDistance(Node node_A, Node node_B)
@@ -689,25 +727,7 @@ namespace AlphaStar
             timer_label.Height = timer_values_label.Height;
         }
 
-        private void obstacles_button_Click(object sender, EventArgs e)
-        {
-            Random r = new Random();
 
-            foreach (Button b in grid_panel.Controls)
-            {
-                int colorProbability = r.Next(0, 2);
-
-                if (colorProbability == 1)
-                {
-                    b.BackColor = Color.Black;
-                    Node n = (Node)b.Tag;
-                    n.color = b.BackColor;                    
-
-                    if (!buttonsWithObstacles.Contains(b))
-                        buttonsWithObstacles.Add(b);
-                }
-            }
-        }
 
         private void clear_button_Click(object sender, EventArgs e)
         {
@@ -722,8 +742,6 @@ namespace AlphaStar
                 startButton = null;
                 finishButton = null;
             }
-
-
 
             Node n;
             duration_label.Text = "";

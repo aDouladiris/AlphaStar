@@ -70,8 +70,6 @@ namespace AlphaStar
 
         public static string[] ShowDialog(string text, string caption, int default_X, int default_Y)
         {
-
-
             Form prompt = new Form()
             {
                 FormBorderStyle = FormBorderStyle.FixedDialog,
@@ -144,8 +142,6 @@ namespace AlphaStar
 
             prompt.Width += 20;
             prompt.Height = confirmButton.Location.Y + 3*confirmButton.Height;
-
-
             confirmButton.Click += (sender, e) => { prompt.Close(); };
             prompt.Controls.Add(promptLabel);
             prompt.Controls.Add(horizontal_axis_Textbox);
@@ -154,9 +150,7 @@ namespace AlphaStar
             prompt.Controls.Add(vertical_axis_Textbox);
             prompt.Controls.Add(confirmButton);
             prompt.AcceptButton = confirmButton;
-
             string[] default_returning_array = new string[2] { $"{default_X}", $"{default_Y}" };
-
             return prompt.ShowDialog() == DialogResult.OK ? new string[2] { horizontal_axis_Textbox.Text, vertical_axis_Textbox.Text } : default_returning_array;
         }
 
