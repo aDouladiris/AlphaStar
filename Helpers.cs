@@ -10,8 +10,6 @@ namespace AlphaStar
 {
     static class Helpers
     {
-        static Form parent;
-
         public static string ShowDialogSlowMotion(string text, string caption, int default_time)
         {
             Form prompt = new Form()
