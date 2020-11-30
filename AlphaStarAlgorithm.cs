@@ -62,12 +62,9 @@ namespace AlphaStar
 
             duration_label.Width = duration_label.Width * 2;
             duration_label.Location = new Point(grid_panel.Location.X + grid_panel.Width + 5, duration_label.Location.Y);
-            controlPanel.Add(duration_label);
 
             timer_label.Location = new Point(duration_label.Location.X, timer_label.Location.Y);
-            controlPanel.Add(timer_label);
             timer_values_label.Location = new Point(timer_label.Location.X + timer_label.Width, timer_label.Location.Y);
-            controlPanel.Add(timer_values_label);
 
             List<Button> btns = new List<Button> { exit_button, obstacles_button, algo_button, clear_button, clearAll_button, debug_button, resize_button, slow_motion_button };
 
